@@ -4,13 +4,13 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.drive.Drive;
 
 public final class DefaultDriveCommand extends Command {
     // TODO: declare variables here
 
-    public DefaultDriveCommand(DriveSubsystem driveSubsystem) {
+    public DefaultDriveCommand(Drive driveSubsystem) {
         // TODO: assign variables here
 
         addRequirements(driveSubsystem);
