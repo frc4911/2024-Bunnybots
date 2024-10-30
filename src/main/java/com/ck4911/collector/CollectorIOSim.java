@@ -17,7 +17,7 @@ import org.littletonrobotics.junction.AutoLog;
 public final class CollectorIOSim implements CollectorIO {
   // TODO: modify this
   private SingleJointedArmSim armSim =
-      new SingleJointedArmSim(DCMotor.getNEO(1), 50, 0.5, 0.5, 0.0, Math.PI / 2.0, true);
+      new SingleJointedArmSim(DCMotor.getNEO(1), 50, 0.5, 0.5, 0.0, Math.PI / 2.0, true, 0.0);
   private double armAppliedVolts = 0.0;
 
   @Inject
