@@ -10,11 +10,6 @@ package com.ck4911.drive;
 import static edu.wpi.first.units.Units.Volts;
 
 import com.ck4911.Constants.Mode;
-import com.ck4911.util.LocalADStarAK;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,7 +28,7 @@ import javax.inject.Inject;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
-public class Drive extends SubsystemBase {
+public final class Drive extends SubsystemBase {
   // TODO: Measure these values!
   public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
   public static final double TRACK_WIDTH = Units.inchesToMeters(26.0);
@@ -58,34 +53,6 @@ public class Drive extends SubsystemBase {
     ks = mode == Mode.SIM ? 0.0 : 0.0;
     kv = mode == Mode.SIM ? 0.227 : 0.0;
     feedforward = new SimpleMotorFeedforward(ks, kv);
-
-    // Configure AutoBuilder for PathPlanner
-    AutoBuilder.configureRamsete(
-        this::getPose,
-        this::setPose,
-        () ->
-            kinematics.toChassisSpeeds(
-                new DifferentialDriveWheelSpeeds(
-                    getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec())),
-        (speeds) -> {
-          var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-          driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
-        },
-        new ReplanningConfig(),
-        () ->
-            DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Red,
-        this);
-    Pathfinding.setPathfinder(new LocalADStarAK());
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
 
     // Configure SysId
     sysId =
