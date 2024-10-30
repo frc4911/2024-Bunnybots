@@ -9,7 +9,6 @@ package com.ck4911.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
-import com.ck4911.Constants;
 import com.ck4911.Constants.Mode;
 import com.ck4911.util.LocalADStarAK;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -19,6 +18,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
@@ -29,17 +29,14 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import javax.inject.Inject;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+  // TODO: Measure these values!
   public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
   public static final double TRACK_WIDTH = Units.inchesToMeters(26.0);
-
-  // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
-  // Consider using SysId routines defined in RobotContainer
-  private static final double KS = Constants.currentMode == Mode.SIM ? 0.0 : 0.0;
-  private static final double KV = Constants.currentMode == Mode.SIM ? 0.227 : 0.0;
 
   private final DriveIO io;
   private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
@@ -47,12 +44,20 @@ public class Drive extends SubsystemBase {
       new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
   private final DifferentialDriveKinematics kinematics =
       new DifferentialDriveKinematics(TRACK_WIDTH);
-  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(KS, KV);
+  private final SimpleMotorFeedforward feedforward;
+  private final double ks;
+  private final double kv;
   private final SysIdRoutine sysId;
 
-  /** Creates a new Drive. */
-  public Drive(DriveIO io) {
+  @Inject
+  public Drive(Mode mode, DriveIO io) {
     this.io = io;
+
+    // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
+    // Consider using SysId routines defined in RobotContainer
+    ks = mode == Mode.SIM ? 0.0 : 0.0;
+    kv = mode == Mode.SIM ? 0.227 : 0.0;
+    feedforward = new SimpleMotorFeedforward(ks, kv);
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configureRamsete(
@@ -151,6 +156,17 @@ public class Drive extends SubsystemBase {
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     odometry.resetPosition(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+  }
+
+  public ChassisSpeeds getSpeeds() {
+    return kinematics.toChassisSpeeds(
+        new DifferentialDriveWheelSpeeds(
+            getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec()));
+  }
+
+  public void setSpeeds(ChassisSpeeds speeds) {
+    var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+    driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
   }
 
   /** Returns the position of the left wheels in meters. */

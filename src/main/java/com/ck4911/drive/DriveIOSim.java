@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
+import javax.inject.Inject;
 
 public class DriveIOSim implements DriveIO {
   private static final double KP = 0.2;
@@ -28,6 +29,9 @@ public class DriveIOSim implements DriveIO {
   private PIDController rightPID = new PIDController(KP, 0.0, KD);
   private double leftFFVolts = 0.0;
   private double rightFFVolts = 0.0;
+
+  @Inject
+  public DriveIOSim() {}
 
   @Override
   public void updateInputs(DriveIOInputs inputs) {
