@@ -13,19 +13,19 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import org.littletonrobotics.junction.AutoLog;
 
-public final class CollectorIOReal implements CollectorIO {
+public final class CollectorIOSim implements CollectorIO {
   // TODO: modify this
   private SingleJointedArmSim armSim =
       new SingleJointedArmSim(DCMotor.getNEO(1), 50, 0.5, 0.5, 0.0, Math.PI / 2.0, true);
   private double armAppliedVolts = 0.0;
 
-  public CollectorIOReal() {
-    System.out.println("[Init] Creating CollectorIORealSim");
+  public CollectorIOSim() {
+    System.out.println("[Init] Creating CollectorIOSim");
     armSim.setState(VecBuilder.fill(Math.PI / 2.0, 0.0));
   }
 
   @Override
-  public void updateInputs(CubeIntakeIOInputs inputs) {
+  public void updateInputs(CollectorIOInputs inputs) {
     // TODO: update the sim at the configured period
     // armSim.update(Constants.loopPeriodSecs);
 
