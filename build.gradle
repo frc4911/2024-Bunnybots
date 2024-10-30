@@ -10,7 +10,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-def ROBOT_MAIN_CLASS = "com.ck4911.Main"
+def ROBOT_MAIN_CLASS = "com.ck4911.robot.EntryPoint"
 
 repositories {
     mavenCentral()

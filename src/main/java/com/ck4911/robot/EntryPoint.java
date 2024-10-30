@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911;
+package com.ck4911.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.RobotBase;
  * you are doing, do not modify this file except to change the parameter class to the startRobot
  * call.
  */
-public final class Main {
-  private Main() {}
+public final class EntryPoint {
+  private EntryPoint() {}
 
   /**
    * Main initialization function. Do not perform any initialization here.
@@ -23,6 +23,6 @@ public final class Main {
    * <p>If you change your main robot class, change the parameter type.
    */
   public static void main(String... args) {
-    RobotBase.startRobot(Robot::new);
+    RobotBase.startRobot(() -> DaggerBunnyBotComponent.create().robot());
   }
 }

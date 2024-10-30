@@ -16,7 +16,12 @@ package com.ck4911;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  public static final Mode currentMode = Mode.REAL;
+
+  public static enum RobotType {
+    SIMBOT,
+    DEVBOT,
+    COMPBOT
+  }
 
   public static enum Mode {
     /** Running on a real robot. */

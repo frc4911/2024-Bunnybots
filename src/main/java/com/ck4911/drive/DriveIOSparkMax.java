@@ -17,6 +17,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import javax.inject.Inject;
 
 public class DriveIOSparkMax implements DriveIO {
   private static final double GEAR_RATIO = 10.0;
@@ -35,6 +36,7 @@ public class DriveIOSparkMax implements DriveIO {
   private final Pigeon2 pigeon = new Pigeon2(20);
   private final StatusSignal<Double> yaw = pigeon.getYaw();
 
+  @Inject
   public DriveIOSparkMax() {
     leftLeader.restoreFactoryDefaults();
     rightLeader.restoreFactoryDefaults();
