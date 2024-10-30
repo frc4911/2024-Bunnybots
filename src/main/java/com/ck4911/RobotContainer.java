@@ -1,13 +1,11 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) 2024 FRC 4911
+// https://github.com/frc4911
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
 package com.ck4911;
-
-import com.ck4911.Constants;
-import com.ck4911.commands.Autos;
-import com.ck4911.commands.DefaultDriveCommand;
-import com.ck4911.drive.Drive;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -41,7 +39,7 @@ public class RobotContainer {
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(exampleSubsystem::exampleCondition)
-        // .onTrue(new ExampleCommand(exampleSubsystem));
+    // .onTrue(new ExampleCommand(exampleSubsystem));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

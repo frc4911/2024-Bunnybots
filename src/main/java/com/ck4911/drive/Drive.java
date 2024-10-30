@@ -1,13 +1,13 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) 2024 FRC 4911
+// https://github.com/frc4911
+//
+// Use of this source code is governed by an MIT-style
+// license that can be found in the LICENSE file at
+// the root directory of this project.
 
 package com.ck4911.drive;
 
 import static edu.wpi.first.units.Units.Volts;
-
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
 
 import com.ck4911.Constants;
 import com.ck4911.Constants.Mode;
@@ -16,10 +16,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
-
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -31,6 +29,8 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
   public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
@@ -143,8 +143,7 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose in meters. */
-  /**TODO: Update AdvantageKit or manually log 
-   * @AutoLogOutput(key = "Odometry/Robot") */
+  /** TODO: Update AdvantageKit or manually log @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
