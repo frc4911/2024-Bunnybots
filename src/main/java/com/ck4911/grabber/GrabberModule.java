@@ -17,7 +17,7 @@ public interface GrabberModule {
 
   @Provides
   public static GrabberIO providesGrabberIO(
-      Mode mode, Provider<GrabberIOReal> realProvider, Provider<CGrabberIOSim> simProvider) {
+      Mode mode, Provider<GrabberIOReal> realProvider, Provider<GrabberIOSim> simProvider) {
     switch (mode) {
       case REAL:
         return realProvider.get();
