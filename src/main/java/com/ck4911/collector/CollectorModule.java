@@ -16,7 +16,7 @@ import javax.inject.Provider;
 public interface CollectorModule {
 
   @Provides
-  public static CollectorIO providesDriveIO(
+  public static CollectorIO providesCollectorIO(
       Mode mode, Provider<CollectorIOReal> realProvider, Provider<CollectorIOSim> simProvider) {
     switch (mode) {
       case REAL:
