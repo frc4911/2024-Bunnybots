@@ -177,4 +177,4 @@ logs/
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
 
-/src/main/java/com/cyberknights4911/BuildConstants.java
+/src/main/java/com/ck4911/BuildConstants.java

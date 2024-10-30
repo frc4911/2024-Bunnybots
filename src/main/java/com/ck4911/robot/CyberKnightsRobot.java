@@ -10,6 +10,7 @@ package com.ck4911.robot;
 import com.ck4911.BuildConstants;
 import com.ck4911.Constants.Mode;
 import com.ck4911.auto.AutoCommandHandler;
+import com.ck4911.control.ControllerBinding;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ctre.phoenix6.CANBus;
@@ -74,6 +75,7 @@ public class CyberKnightsRobot extends LoggedRobot {
   }
 
   private final AutoCommandHandler autoCommandHandler;
+  private final ControllerBinding controllerBinding;
   private final CommandScheduler scheduler;
   private final Mode robotMode;
   private final boolean tuningMode;
@@ -82,12 +84,14 @@ public class CyberKnightsRobot extends LoggedRobot {
   @Inject
   public CyberKnightsRobot(
       AutoCommandHandler autoCommandHandler,
+      ControllerBinding controllerBinding,
       CommandScheduler scheduler,
       @Named("TuningMode") boolean tuningMode,
       Mode robotMode,
       Provider<RobotContainer> containerProvider) {
     super();
     this.autoCommandHandler = autoCommandHandler;
+    this.controllerBinding = controllerBinding;
     this.scheduler = scheduler;
     this.tuningMode = tuningMode;
     this.robotMode = robotMode;
@@ -179,6 +183,10 @@ public class CyberKnightsRobot extends LoggedRobot {
 
     RobotController.setBrownoutVoltage(6.0);
     robotContainer = containerProvider.get();
+
+    autoCommandHandler.setupAutos();
+
+    controllerBinding.setupControls();
   }
 
   /** This function is called periodically during all modes. */
@@ -190,7 +198,7 @@ public class CyberKnightsRobot extends LoggedRobot {
     autoCommandHandler.checkCurrentCommand();
 
     // Robot container periodic methods
-    // TODO: run check on controllers
+    controllerBinding.checkControllers();
     robotContainer.updateDashboardOutputs();
     // TODO: run other important checks
 
