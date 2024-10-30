@@ -16,7 +16,7 @@ import javax.inject.Provider;
 public interface HopperModule {
 
   @Provides
-  public static HopperIO providesDriveIO(
+  public static HopperIO providesHopperIO(
       Mode mode, Provider<HopperIOReal> realProvider, Provider<HopperIOSim> simProvider) {
     switch (mode) {
       case REAL:
