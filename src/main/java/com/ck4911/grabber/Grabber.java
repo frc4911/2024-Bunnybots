@@ -15,7 +15,7 @@ public final class Grabber extends SubsystemBase {
   private final GrabberIO io;
   
   @Inject
-  public Collector(GrabberIO io) {
+  public Grabber(GrabberIO io) {
     this.io = io;
   }
 }
