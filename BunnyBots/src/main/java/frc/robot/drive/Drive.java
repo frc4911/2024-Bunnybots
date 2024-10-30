@@ -4,17 +4,24 @@
 
 package frc.robot.drive;
 
-import com.revrobotics.SparkAnalogSensor.Mode;
+import static edu.wpi.first.units.Units.Volts;
+
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 
 public class Drive extends SubsystemBase {
   public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
@@ -38,33 +45,33 @@ public class Drive extends SubsystemBase {
   public Drive(DriveIO io) {
     this.io = io;
 
-    // Configure AutoBuilder for PathPlanner
-    AutoBuilder.configureRamsete(
-        this::getPose,
-        this::setPose,
-        () ->
-            kinematics.toChassisSpeeds(
-                new DifferentialDriveWheelSpeeds(
-                    getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec())),
-        (speeds) -> {
-          var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
-          driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
-        },
-        new ReplanningConfig(),
-        () ->
-            DriverStation.getAlliance().isPresent()
-                && DriverStation.getAlliance().get() == Alliance.Red,
-        this);
-    Pathfinding.setPathfinder(new LocalADStarAK());
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
+    // // Configure AutoBuilder for PathPlanner
+    // AutoBuilder.configureRamsete(
+    //     this::getPose,
+    //     this::setPose,
+    //     () ->
+    //         kinematics.toChassisSpeeds(
+    //             new DifferentialDriveWheelSpeeds(
+    //                 getLeftVelocityMetersPerSec(), getRightVelocityMetersPerSec())),
+    //     (speeds) -> {
+    //       var wheelSpeeds = kinematics.toWheelSpeeds(speeds);
+    //       driveVelocity(wheelSpeeds.leftMetersPerSecond, wheelSpeeds.rightMetersPerSecond);
+    //     },
+    //     new ReplanningConfig(),
+    //     () ->
+    //         DriverStation.getAlliance().isPresent()
+    //             && DriverStation.getAlliance().get() == Alliance.Red,
+    //     this);
+    // Pathfinding.setPathfinder(new LocalADStarAK());
+    // PathPlannerLogging.setLogActivePathCallback(
+    //     (activePath) -> {
+    //       Logger.recordOutput(
+    //           "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+    //     });
+    // PathPlannerLogging.setLogTargetPoseCallback(
+    //     (targetPose) -> {
+    //       Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+    //     });
 
     // Configure SysId
     sysId =
@@ -127,7 +134,8 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose in meters. */
-  @AutoLogOutput(key = "Odometry/Robot")
+  /**TODO: Update AdvantageKit or manually log 
+   * @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
