@@ -1,32 +1,4 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "java",
-      "name": "EntryPoint",
-      "request": "launch",
-      "mainClass": "com.ck4911.robot.EntryPoint",
-      "projectName": "BunnyBots"
-    },
-    {
-      "type": "wpilib",
-      "name": "WPILib Desktop Debug",
-      "request": "launch",
-      "desktop": true
-    },
-    {
-      "type": "wpilib",
-      "name": "WPILib roboRIO Debug",
-      "request": "launch",
-      "desktop": false
-    }
-  ]
-}
-
-{
   "version": "0.2.0",
   "configurations": [
     {
