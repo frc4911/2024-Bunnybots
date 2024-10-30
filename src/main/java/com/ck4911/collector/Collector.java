@@ -7,6 +7,8 @@
 
 package com.ck4911.drive;
 
+import javax.inject.Inject;
+
 public final class Collector extends SubsystemBase {
 
   private final CollectorIO io;
