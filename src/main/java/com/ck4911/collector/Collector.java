@@ -5,8 +5,9 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.drive;
+package com.ck4911.collector;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import javax.inject.Inject;
 
 public final class Collector extends SubsystemBase {
