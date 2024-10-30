@@ -17,7 +17,7 @@ import org.littletonrobotics.junction.AutoLog;
 public final class GrabberIOSim implements GrabberIO {
 
   @Inject
-  public CollectorIOSim() {
+  public GrabberIOSim() {
     System.out.println("[Init] Creating GrabberIOSim");
   }
 
