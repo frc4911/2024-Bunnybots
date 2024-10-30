@@ -1,10 +1,10 @@
 [versions]
-dagger = "2.51.1"
+dagger = "2.52"
 gradle-rio = "2024.3.2"
-gversion = "1.10.2"
-spotless = "6.12.0"
-mockito = "5.11.0"
-jupiter = "5.10.1"
+gversion = "1.10.3"
+spotless = "6.25.0"
+mockito = "5.14.2"
+jupiter = "5.11.3"
 
 [libraries]
 dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }
