@@ -7,6 +7,7 @@
 
 package com.ck4911.collector;
 
+import javax.inject.Inject;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -19,6 +20,7 @@ public final class CollectorIOSim implements CollectorIO {
       new SingleJointedArmSim(DCMotor.getNEO(1), 50, 0.5, 0.5, 0.0, Math.PI / 2.0, true);
   private double armAppliedVolts = 0.0;
 
+  @Inject
   public CollectorIOSim() {
     System.out.println("[Init] Creating CollectorIOSim");
     armSim.setState(VecBuilder.fill(Math.PI / 2.0, 0.0));
