@@ -4,15 +4,14 @@
 
 package frc.robot.drive;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-
-import com.revrobotics.SparkAnalogSensor.Mode;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -22,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 
 public class Drive extends SubsystemBase {
   public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
@@ -134,7 +134,8 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose in meters. */
-  @AutoLogOutput(key = "Odometry/Robot")
+  /**TODO: Update AdvantageKit or manually log 
+   * @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
