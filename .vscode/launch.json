@@ -6,11 +6,29 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Main",
+      "name": "EntryPoint",
       "request": "launch",
-      "mainClass": "frc.robot.Main",
+      "mainClass": "com.ck4911.robot.EntryPoint",
       "projectName": "BunnyBots"
     },
+    {
+      "type": "wpilib",
+      "name": "WPILib Desktop Debug",
+      "request": "launch",
+      "desktop": true
+    },
+    {
+      "type": "wpilib",
+      "name": "WPILib roboRIO Debug",
+      "request": "launch",
+      "desktop": false
+    }
+  ]
+}
+
+{
+  "version": "0.2.0",
+  "configurations": [
     {
       "type": "wpilib",
       "name": "WPILib Desktop Debug",
