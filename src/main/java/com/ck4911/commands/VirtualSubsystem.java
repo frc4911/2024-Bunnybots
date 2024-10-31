@@ -7,9 +7,6 @@
 
 package com.ck4911.commands;
 
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.List;
-
 public interface VirtualSubsystem {
   /** This method is called periodically once per loop cycle. */
   public void periodic();

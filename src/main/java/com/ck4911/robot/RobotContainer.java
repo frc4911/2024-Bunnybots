@@ -29,7 +29,7 @@ public class RobotContainer {
   public void autonomousInit() {
     autoCommandHandler.startCurrentCommand();
   }
-  
+
   public void teleopInit() {
     autoCommandHandler.stopCurrentCommand();
   }

@@ -8,9 +8,9 @@
 package com.ck4911.auto;
 
 import com.ck4911.commands.VirtualSubsystem;
-import dagger.multibindings.IntoSet;
 import dagger.Binds;
 import dagger.Module;
+import dagger.multibindings.IntoSet;
 
 @Module
 public interface AutoModule {
