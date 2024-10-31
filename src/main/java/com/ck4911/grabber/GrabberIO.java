@@ -11,8 +11,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface GrabberIO {
   @AutoLog
-  public static class GrabberIOInputs {
-  }
+  public static class GrabberIOInputs {}
 
   /** Updates the set of loggable inputs. */
   public default void updateInputs(GrabberIOInputs inputs) {}

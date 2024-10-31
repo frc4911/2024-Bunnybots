@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public final class Hopper extends SubsystemBase {
 
   private final HopperIO io;
-  
+
   @Inject
   public Hopper(HopperIO io) {
     this.io = io;

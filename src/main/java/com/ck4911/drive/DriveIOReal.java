@@ -11,23 +11,23 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import javax.inject.Inject;
 
-public class DriveIOSparkMax implements DriveIO {
+public class DriveIOReal implements DriveIO {
   private static final double GEAR_RATIO = 10.0;
   private static final double KP = 1.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
   private static final double KD = 0.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
 
-  private final CANSparkMax leftLeader = new CANSparkMax(1, MotorType.kBrushless);
-  private final CANSparkMax rightLeader = new CANSparkMax(2, MotorType.kBrushless);
-  private final CANSparkMax leftFollower = new CANSparkMax(3, MotorType.kBrushless);
-  private final CANSparkMax rightFollower = new CANSparkMax(4, MotorType.kBrushless);
+  private final CANSparkFlex leftLeader = new CANSparkFlex(1, MotorType.kBrushless);
+  private final CANSparkFlex rightLeader = new CANSparkFlex(2, MotorType.kBrushless);
+  private final CANSparkFlex leftFollower = new CANSparkFlex(3, MotorType.kBrushless);
+  private final CANSparkFlex rightFollower = new CANSparkFlex(4, MotorType.kBrushless);
   private final RelativeEncoder leftEncoder = leftLeader.getEncoder();
   private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
   private final SparkPIDController leftPID = leftLeader.getPIDController();
@@ -37,7 +37,7 @@ public class DriveIOSparkMax implements DriveIO {
   private final StatusSignal<Double> yaw = pigeon.getYaw();
 
   @Inject
-  public DriveIOSparkMax() {
+  public DriveIOReal() {
     leftLeader.restoreFactoryDefaults();
     rightLeader.restoreFactoryDefaults();
     leftFollower.restoreFactoryDefaults();

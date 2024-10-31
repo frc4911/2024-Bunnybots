@@ -7,12 +7,11 @@
 
 package com.ck4911.collector;
 
-import javax.inject.Inject;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
-import org.littletonrobotics.junction.AutoLog;
+import javax.inject.Inject;
 
 public final class CollectorIOSim implements CollectorIO {
   // TODO: modify this

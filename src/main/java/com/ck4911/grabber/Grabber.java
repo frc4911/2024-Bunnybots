@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public final class Grabber extends SubsystemBase {
 
   private final GrabberIO io;
-  
+
   @Inject
   public Grabber(GrabberIO io) {
     this.io = io;
