@@ -7,6 +7,7 @@
 
 package com.ck4911.control;
 
+import com.ck4911.commands.VirtualSubsystem;
 import dagger.multibindings.IntoSet;
 import dagger.Binds;
 import dagger.Module;
