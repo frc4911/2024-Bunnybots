@@ -189,7 +189,7 @@ public class CyberKnightsRobot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     Threads.setCurrentThreadPriority(true, 99);
-    for (VirtualSubsystem virtualSubsystem: virtualSubsystems) {
+    for (VirtualSubsystem virtualSubsystem : virtualSubsystems) {
       virtualSubsystem.periodic();
     }
     scheduler.run();

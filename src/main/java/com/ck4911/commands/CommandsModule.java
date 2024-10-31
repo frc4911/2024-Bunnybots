@@ -7,10 +7,9 @@
 
 package com.ck4911.commands;
 
-import com.ck4911.commands.VirtualSubsystem;
-import dagger.multibindings.ElementsIntoSet;
 import dagger.Module;
 import dagger.Provides;
+import dagger.multibindings.ElementsIntoSet;
 import java.util.Collections;
 import java.util.Set;
 
