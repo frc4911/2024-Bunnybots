@@ -9,8 +9,7 @@ package com.ck4911.robot;
 
 import com.ck4911.BuildConstants;
 import com.ck4911.Constants.Mode;
-import com.ck4911.auto.AutoCommandHandler;
-import com.ck4911.control.ControllerBinding;
+import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ctre.phoenix6.CANBus;
@@ -23,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.DoubleSupplier;
 import javax.inject.Inject;
@@ -74,25 +74,25 @@ public class CyberKnightsRobot extends LoggedRobot {
                 && CyberKnightsRobot.teleElapsedTime > teleElapsedTime.getAsDouble());
   }
 
-  private final AutoCommandHandler autoCommandHandler;
-  private final ControllerBinding controllerBinding;
   private final CommandScheduler scheduler;
+  private final Set<VirtualSubsystem> virtualSubsystems;
   private final Mode robotMode;
+  private final String robotName;
   private final boolean tuningMode;
   private final Provider<RobotContainer> containerProvider;
 
   @Inject
   public CyberKnightsRobot(
-      AutoCommandHandler autoCommandHandler,
-      ControllerBinding controllerBinding,
       CommandScheduler scheduler,
+      Set<VirtualSubsystem> virtualSubsystems,
+      @Named("RobotName") String robotName,
       @Named("TuningMode") boolean tuningMode,
       Mode robotMode,
       Provider<RobotContainer> containerProvider) {
     super();
-    this.autoCommandHandler = autoCommandHandler;
-    this.controllerBinding = controllerBinding;
     this.scheduler = scheduler;
+    this.virtualSubsystems = virtualSubsystems;
+    this.robotName = robotName;
     this.tuningMode = tuningMode;
     this.robotMode = robotMode;
     this.containerProvider = containerProvider;
@@ -106,7 +106,7 @@ public class CyberKnightsRobot extends LoggedRobot {
   public void robotInit() {
 
     // Record metadata
-    // Logger.recordMetadata("Robot", Constants.getRobot().toString());
+    Logger.recordMetadata("Robot", robotName);
     Logger.recordMetadata("TuningMode", Boolean.toString(tuningMode));
     Logger.recordMetadata("RuntimeType", getRuntimeType().toString());
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -183,22 +183,18 @@ public class CyberKnightsRobot extends LoggedRobot {
 
     RobotController.setBrownoutVoltage(6.0);
     robotContainer = containerProvider.get();
-
-    autoCommandHandler.setupAutos();
-
-    controllerBinding.setupControls();
   }
 
   /** This function is called periodically during all modes. */
   @Override
   public void robotPeriodic() {
     Threads.setCurrentThreadPriority(true, 99);
+    for (VirtualSubsystem virtualSubsystem: virtualSubsystems) {
+      virtualSubsystem.periodic();
+    }
     scheduler.run();
 
-    autoCommandHandler.checkCurrentCommand();
-
     // Robot container periodic methods
-    controllerBinding.checkControllers();
     robotContainer.updateDashboardOutputs();
     // TODO: run other important checks
 
@@ -256,7 +252,7 @@ public class CyberKnightsRobot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autoCommandHandler.startCurrentCommand();
+    robotContainer.autonomousInit();
   }
 
   /** This function is called periodically during autonomous. */
@@ -266,7 +262,7 @@ public class CyberKnightsRobot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
-    autoCommandHandler.stopCurrentCommand();
+    robotContainer.teleopInit();
 
     teleStart = Timer.getFPGATimestamp();
   }
