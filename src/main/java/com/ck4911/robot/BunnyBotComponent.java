@@ -14,7 +14,7 @@ import com.ck4911.commands.CommandsModule;
 import com.ck4911.drive.DriveModule;
 import com.ck4911.grabber.GrabberModule;
 import com.ck4911.hopper.HopperModule;
-import com.ck4911.led.LedModule;
+import com.ck4911.leds.LedModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
