@@ -7,6 +7,7 @@
 
 package com.ck4911.control;
 
+import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.drive.Drive;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
