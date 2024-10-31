@@ -8,6 +8,7 @@
 package com.ck4911.robot;
 
 import com.ck4911.collector.CollectorModule;
+import com.ck4911.command.CommandsModule;
 import com.ck4911.drive.DriveModule;
 import com.ck4911.grabber.GrabberModule;
 import com.ck4911.hopper.HopperModule;
@@ -17,6 +18,7 @@ import javax.inject.Singleton;
 @Component(
     modules = {
       CollectorModule.class,
+      CommandsModule.class,
       DriveModule.class,
       GrabberModule.class,
       HopperModule.class,
