@@ -77,6 +77,8 @@ dependencies {
     implementation(libs.dagger)
     annotationProcessor(libs.dagger.compiler)
 
+    implementation(libs.jama)
+
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
