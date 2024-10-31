@@ -18,7 +18,6 @@ public interface CommandsModule {
   @IntoSet
   public static VirtualSubsystem providesDefault() {
     return new VirtualSubsystem() {
-      @Overrride
       public void periodic() {}
     };
   }
