@@ -10,6 +10,7 @@ package com.ck4911.robot;
 import com.ck4911.BuildConstants;
 import com.ck4911.Constants.Mode;
 import com.ck4911.auto.AutoCommandHandler;
+import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.ControllerBinding;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
@@ -77,6 +78,7 @@ public class CyberKnightsRobot extends LoggedRobot {
   private final AutoCommandHandler autoCommandHandler;
   private final ControllerBinding controllerBinding;
   private final CommandScheduler scheduler;
+  private final Set<VirtualSubsystem> virtualSubsystems;
   private final Mode robotMode;
   private final boolean tuningMode;
   private final Provider<RobotContainer> containerProvider;
@@ -86,6 +88,7 @@ public class CyberKnightsRobot extends LoggedRobot {
       AutoCommandHandler autoCommandHandler,
       ControllerBinding controllerBinding,
       CommandScheduler scheduler,
+      Set<VirtualSubsystem> virtualSubsystems,
       @Named("TuningMode") boolean tuningMode,
       Mode robotMode,
       Provider<RobotContainer> containerProvider) {
@@ -93,6 +96,7 @@ public class CyberKnightsRobot extends LoggedRobot {
     this.autoCommandHandler = autoCommandHandler;
     this.controllerBinding = controllerBinding;
     this.scheduler = scheduler;
+    this.virtualSubsystems = virtualSubsystems;
     this.tuningMode = tuningMode;
     this.robotMode = robotMode;
     this.containerProvider = containerProvider;
@@ -193,6 +197,9 @@ public class CyberKnightsRobot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     Threads.setCurrentThreadPriority(true, 99);
+    for (VirtualSubsystem virtualSubsystem: virtualSubsystems) {
+      virtualSubsystem.periodic();
+    }
     scheduler.run();
 
     autoCommandHandler.checkCurrentCommand();
