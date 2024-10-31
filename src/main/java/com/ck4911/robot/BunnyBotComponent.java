@@ -8,7 +8,7 @@
 package com.ck4911.robot;
 
 import com.ck4911.collector.CollectorModule;
-import com.ck4911.command.CommandsModule;
+import com.ck4911.commands.CommandsModule;
 import com.ck4911.drive.DriveModule;
 import com.ck4911.grabber.GrabberModule;
 import com.ck4911.hopper.HopperModule;
