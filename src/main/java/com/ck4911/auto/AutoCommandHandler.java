@@ -7,6 +7,7 @@
 
 package com.ck4911.auto;
 
+import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.drive.Drive;
 import com.ck4911.util.LocalADStarAK;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -26,7 +27,7 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 @Singleton
-public final class AutoCommandHandler {
+public final class AutoCommandHandler implements VirtualSubsystem {
   private final LoggedDashboardChooser<Command> chooser;
   private final Drive drive;
   private double autoStart;
@@ -60,9 +61,28 @@ public final class AutoCommandHandler {
         (targetPose) -> {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
+
+    setupAutos();
   }
 
-  public void setupAutos() {
+  @Override
+  public void periodic() {
+    // Print auto duration
+    if (currentAutoCommand != null) {
+      if (!currentAutoCommand.isScheduled() && !autoMessagePrinted) {
+        if (DriverStation.isAutonomousEnabled()) {
+          System.out.printf(
+              "*** Auto finished in %.2f secs ***%n", Timer.getFPGATimestamp() - autoStart);
+        } else {
+          System.out.printf(
+              "*** Auto cancelled in %.2f secs ***%n", Timer.getFPGATimestamp() - autoStart);
+        }
+        autoMessagePrinted = true;
+      }
+    }
+  }
+
+  private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
     // Set up SysId routines
@@ -84,22 +104,6 @@ public final class AutoCommandHandler {
     currentAutoCommand = chooser.get();
     if (currentAutoCommand != null) {
       currentAutoCommand.schedule();
-    }
-  }
-
-  public void checkCurrentCommand() {
-    // Print auto duration
-    if (currentAutoCommand != null) {
-      if (!currentAutoCommand.isScheduled() && !autoMessagePrinted) {
-        if (DriverStation.isAutonomousEnabled()) {
-          System.out.printf(
-              "*** Auto finished in %.2f secs ***%n", Timer.getFPGATimestamp() - autoStart);
-        } else {
-          System.out.printf(
-              "*** Auto cancelled in %.2f secs ***%n", Timer.getFPGATimestamp() - autoStart);
-        }
-        autoMessagePrinted = true;
-      }
     }
   }
 

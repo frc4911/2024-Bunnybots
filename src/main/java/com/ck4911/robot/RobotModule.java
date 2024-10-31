@@ -17,7 +17,13 @@ import javax.inject.Named;
 public interface RobotModule {
 
   @Provides
+  public static @Named("RobotName") String providesRobotName() {
+    return "BunnyBotNameGoesHere";
+  }
+
+  @Provides
   public static @Named("TuningMode") boolean providesTuningMode() {
+    // TODO: toggle this for competition
     return true;
   }
 

@@ -7,17 +7,30 @@
 
 package com.ck4911.robot;
 
+import com.ck4911.auto.AutoCommandHandler;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import javax.inject.Inject;
 
 public class RobotContainer {
 
+  private final AutoCommandHandler autoCommandHandler;
+
   @Inject
-  public RobotContainer() {}
+  public RobotContainer(AutoCommandHandler autoCommandHandler) {
+    this.autoCommandHandler = autoCommandHandler;
+  }
 
   /** Updates dashboard data. */
   public void updateDashboardOutputs() {
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
+  }
+
+  public void autonomousInit() {
+    autoCommandHandler.startCurrentCommand();
+  }
+  
+  public void teleopInit() {
+    autoCommandHandler.stopCurrentCommand();
   }
 }

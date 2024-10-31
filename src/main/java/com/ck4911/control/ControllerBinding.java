@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public final class ControllerBinding {
+public final class ControllerBinding implements VirtualSubsystem {
   private final Alert driverDisconnected =
       new Alert("Driver controller disconnected (port 0).", AlertType.WARNING);
   private final Alert operatorDisconnected =
@@ -33,20 +33,23 @@ public final class ControllerBinding {
     driver = new CommandXboxController(0);
     operator = new CommandXboxController(1);
     this.drive = drive;
+
+    setupControls();
   }
 
-  public void setupControls() {
-    drive.setDefaultCommand(
-        Commands.run(() -> drive.driveArcade(-driver.getLeftY(), driver.getLeftX()), drive));
-  }
-
-  public void checkControllers() {
+  @Overrride
+  public void periodic() {
     driverDisconnected.set(
         !DriverStation.isJoystickConnected(driver.getHID().getPort())
             || !DriverStation.getJoystickIsXbox(driver.getHID().getPort()));
     operatorDisconnected.set(
         !DriverStation.isJoystickConnected(operator.getHID().getPort())
             || !DriverStation.getJoystickIsXbox(operator.getHID().getPort()));
+  }
+
+  private void setupControls() {
+    drive.setDefaultCommand(
+        Commands.run(() -> drive.driveArcade(-driver.getLeftY(), driver.getLeftX()), drive));
   }
 
   public void setDriverRumble(boolean enabled) {
