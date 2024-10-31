@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
-public final class Leds extends VirtualSubsystem {
+public final class Leds implements VirtualSubsystem {
 
   // Robot state tracking
   public int loopCycleCount = 0;
