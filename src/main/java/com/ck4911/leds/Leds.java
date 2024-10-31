@@ -67,7 +67,7 @@ public final class Leds implements VirtualSubsystem {
     loadingNotifier =
         new Notifier(
             () -> {
-              synchronized (this) {
+              synchronized (Leds.this) {
                 breath(Color.kWhite, Color.kBlack, System.currentTimeMillis() / 1000.0);
                 leds.setData(buffer);
               }
@@ -76,7 +76,7 @@ public final class Leds implements VirtualSubsystem {
   }
 
   @Override
-  public void periodic() {
+  public synchronized void periodic() {
     // Update alliance color
     if (DriverStation.isFMSAttached()) {
       alliance = DriverStation.getAlliance();
@@ -123,11 +123,6 @@ public final class Leds implements VirtualSubsystem {
       } else {
         // Default pattern
         wave(allianceColor, secondaryDisabledColor, waveAllianceCycleLength, waveAllianceDuration);
-      }
-
-      // Same battery alert
-      if (sameBattery) {
-        breath(Color.kRed, Color.kBlack);
       }
     } else if (DriverStation.isAutonomous()) {
       wave(Color.kGold, Color.kDarkBlue, waveFastCycleLength, waveFastDuration);
