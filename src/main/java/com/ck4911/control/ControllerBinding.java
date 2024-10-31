@@ -38,7 +38,7 @@ public final class ControllerBinding implements VirtualSubsystem {
     setupControls();
   }
 
-  @Overrride
+  @Override
   public void periodic() {
     driverDisconnected.set(
         !DriverStation.isJoystickConnected(driver.getHID().getPort())
