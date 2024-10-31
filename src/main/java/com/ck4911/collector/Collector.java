@@ -13,7 +13,7 @@ import javax.inject.Inject;
 public final class Collector extends SubsystemBase {
 
   private final CollectorIO io;
-  
+
   @Inject
   public Collector(CollectorIO io) {
     this.io = io;

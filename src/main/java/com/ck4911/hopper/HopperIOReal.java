@@ -8,9 +8,8 @@
 package com.ck4911.hopper;
 
 import javax.inject.Inject;
-import org.littletonrobotics.junction.AutoLog;
 
-public final class HopperIOReal implements  HopperIO {
+public final class HopperIOReal implements HopperIO {
 
   @Inject
   public HopperIOReal() {

@@ -8,7 +8,6 @@
 package com.ck4911.grabber;
 
 import javax.inject.Inject;
-import org.littletonrobotics.junction.AutoLog;
 
 public final class GrabberIOReal implements GrabberIO {
 

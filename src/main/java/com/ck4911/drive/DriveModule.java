@@ -17,10 +17,12 @@ public interface DriveModule {
 
   @Provides
   public static DriveIO providesDriveIO(
-      Mode mode, Provider<DriveIOSparkMax> realProvider, Provider<DriveIOSim> simProvider) {
+      Mode mode, Provider<DriveIOReal> realProvider, Provider<DriveIOSim> simProvider) {
     switch (mode) {
       case REAL:
-        return realProvider.get();
+        // TODO: enable this when motors are set up
+        // return realProvider.get();
+        return new DriveIO() {};
       case SIM:
         return simProvider.get();
       default:

@@ -8,7 +8,6 @@
 package com.ck4911.collector;
 
 import javax.inject.Inject;
-import org.littletonrobotics.junction.AutoLog;
 
 public final class CollectorIOReal implements CollectorIO {
 
