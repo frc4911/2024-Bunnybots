@@ -5,19 +5,19 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.collector;
+package com.ck4911.toyota;
 
 import javax.inject.Inject;
 
-public final class CollectorIOReal implements CollectorIO {
+public final class ToyotaIOReal implements ToyotaIO {
 
   @Inject
-  public CollectorIOReal() {
+  public ToyotaIOReal() {
     // TODO: set up motors and encoders here
   }
 
   @Override
-  public void updateInputs(CollectorIOInputs inputs) {
+  public void updateInputs(ToyotaIOInputs inputs) {
     // TODO: set all the values on inputs
   }
 

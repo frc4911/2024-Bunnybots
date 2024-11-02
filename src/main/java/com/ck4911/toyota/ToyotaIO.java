@@ -5,13 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.collector;
+package com.ck4911.toyota;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface CollectorIO {
+public interface ToyotaIO {
   @AutoLog
-  public static class CollectorIOInputs {
+  public static class ToyotaIOInputs {
     public double armAbsolutePositionRad = 0.0;
     public double armRelativePositionRad = 0.0;
     public double armInternalPositionRad = 0.0;
@@ -26,7 +26,7 @@ public interface CollectorIO {
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(CollectorIOInputs inputs) {}
+  public default void updateInputs(ToyotaIOInputs inputs) {}
 
   /** Set the arm motor voltage */
   public default void setArmVoltage(double volts) {}
