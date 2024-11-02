@@ -8,20 +8,20 @@
 package com.ck4911.robot;
 
 import com.ck4911.auto.AutoModule;
-import com.ck4911.collector.CollectorModule;
 import com.ck4911.commands.CommandsModule;
 import com.ck4911.control.ControlModule;
 import com.ck4911.drive.DriveModule;
 import com.ck4911.grabber.GrabberModule;
 import com.ck4911.hopper.HopperModule;
 import com.ck4911.leds.LedModule;
+import com.ck4911.toyota.ToyotaModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
 @Component(
     modules = {
       AutoModule.class,
-      CollectorModule.class,
+      ToyotaModule.class,
       ControlModule.class,
       CommandsModule.class,
       DriveModule.class,
