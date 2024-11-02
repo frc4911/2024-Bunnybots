@@ -12,9 +12,9 @@ import com.ck4911.commands.CommandsModule;
 import com.ck4911.control.ControlModule;
 import com.ck4911.drive.DriveModule;
 import com.ck4911.grabber.GrabberModule;
-import com.ck4911.hopper.HopperModule;
 import com.ck4911.leds.LedModule;
 import com.ck4911.toyota.ToyotaModule;
+import com.ck4911.trinity.TrinityModule;
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -27,7 +27,7 @@ import javax.inject.Singleton;
       DriveModule.class,
       GrabberModule.class,
       LedModule.class,
-      HopperModule.class,
+      TrinityModule.class,
       RobotModule.class,
     })
 @Singleton

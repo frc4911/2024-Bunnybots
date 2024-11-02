@@ -5,13 +5,13 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.hopper;
+package com.ck4911.trinity;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface HopperIO {
+public interface TrinityIO {
   @AutoLog
-  public static class HopperIOInputs {
+  public static class TrinityIOInputs {
     public double armAbsolutePositionRad = 0.0;
     public double armRelativePositionRad = 0.0;
     public double armInternalPositionRad = 0.0;
@@ -23,7 +23,7 @@ public interface HopperIO {
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(HopperIOInputs inputs) {}
+  public default void updateInputs(TrinityIOInputs inputs) {}
 
   /** Set the arm motor voltage */
   public default void setArmVoltage(double volts) {}
