@@ -5,19 +5,19 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.hopper;
+package com.ck4911.trinity;
 
 import javax.inject.Inject;
 
-public final class HopperIOReal implements HopperIO {
+public final class TrinityIOReal implements TrinityIO {
 
   @Inject
-  public HopperIOReal() {
+  public TrinityIOReal() {
     // TODO: set up motors and encoders here
   }
 
   @Override
-  public void updateInputs(HopperIOInputs inputs) {
+  public void updateInputs(TrinityIOInputs inputs) {
     // TODO: set all the values on inputs
   }
 
