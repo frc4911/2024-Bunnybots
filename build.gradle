@@ -148,7 +148,7 @@ project.compileJava.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree(".") {
-            include "**/*.java"
+            include "src/java/**/*.java"
             exclude "**/build/**", "**/build-*/**", "src/main/java/com/ck4911/BuildConstants.java"
         }
         toggleOffOn()
