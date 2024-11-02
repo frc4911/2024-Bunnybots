@@ -8,6 +8,8 @@
 package com.ck4911.robot;
 
 import com.ck4911.auto.AutoCommandHandler;
+import com.ck4911.control.ControllerBinding;
+import com.ck4911.drive.Drive;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import javax.inject.Inject;
@@ -17,7 +19,8 @@ public class RobotContainer {
   private final AutoCommandHandler autoCommandHandler;
 
   @Inject
-  public RobotContainer(AutoCommandHandler autoCommandHandler) {
+  public RobotContainer(
+      AutoCommandHandler autoCommandHandler, Drive drive, ControllerBinding controller) {
     this.autoCommandHandler = autoCommandHandler;
   }
 
