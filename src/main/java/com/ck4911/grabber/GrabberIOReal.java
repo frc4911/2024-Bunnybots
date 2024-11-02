@@ -8,12 +8,16 @@
 package com.ck4911.grabber;
 
 import javax.inject.Inject;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 public final class GrabberIOReal implements GrabberIO {
+  private final TalonFX axle;
+  private final TalonFX roller;
 
   @Inject
   public GrabberIOReal() {
-    // TODO: set up motors and encoders here
+    axle = new TalonFX(GrabberConstants.AXLE_ID);
+    roller = new TalonFX(GrabberConstants.ROLLER_ID);
   }
 
   @Override
