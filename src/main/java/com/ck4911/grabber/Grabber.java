@@ -9,7 +9,9 @@ package com.ck4911.grabber;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public final class Grabber extends SubsystemBase {
 
   private final GrabberIO io;

@@ -24,20 +24,33 @@ public class DriveIOReal implements DriveIO {
   private static final double KP = 1.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
   private static final double KD = 0.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
 
-  private final CANSparkFlex leftLeader = new CANSparkFlex(1, MotorType.kBrushless);
-  private final CANSparkFlex rightLeader = new CANSparkFlex(2, MotorType.kBrushless);
-  private final CANSparkFlex leftFollower = new CANSparkFlex(3, MotorType.kBrushless);
-  private final CANSparkFlex rightFollower = new CANSparkFlex(4, MotorType.kBrushless);
-  private final RelativeEncoder leftEncoder = leftLeader.getEncoder();
-  private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
-  private final SparkPIDController leftPID = leftLeader.getPIDController();
-  private final SparkPIDController rightPID = rightLeader.getPIDController();
+  private final CANSparkFlex leftLeader;
+  private final CANSparkFlex rightLeader;
+  private final CANSparkFlex leftFollower;
+  private final CANSparkFlex rightFollower;
+  private final RelativeEncoder leftEncoder;
+  private final RelativeEncoder rightEncoder;
+  private final SparkPIDController leftPID;
+  private final SparkPIDController rightPID;
 
-  private final Pigeon2 pigeon = new Pigeon2(20);
-  private final StatusSignal<Double> yaw = pigeon.getYaw();
+  private final Pigeon2 pigeon;
+  private final StatusSignal<Double> yaw;
 
   @Inject
-  public DriveIOReal() {
+  public DriveIOReal(DriveConstants driveConstants) {
+    pigeon = new Pigeon2(driveConstants.gyroId());
+    yaw = pigeon.getYaw();
+
+    leftLeader = new CANSparkFlex(driveConstants.frontLeftId(), MotorType.kBrushless);
+    rightLeader = new CANSparkFlex(driveConstants.frontRightId(), MotorType.kBrushless);
+    leftFollower = new CANSparkFlex(driveConstants.backLeftId(), MotorType.kBrushless);
+    rightFollower = new CANSparkFlex(driveConstants.backRightId(), MotorType.kBrushless);
+
+    leftEncoder = leftLeader.getEncoder();
+    rightEncoder = rightLeader.getEncoder();
+    leftPID = leftLeader.getPIDController();
+    rightPID = rightLeader.getPIDController();
+
     leftLeader.restoreFactoryDefaults();
     rightLeader.restoreFactoryDefaults();
     leftFollower.restoreFactoryDefaults();

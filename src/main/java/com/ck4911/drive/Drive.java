@@ -23,9 +23,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+@Singleton
 public final class Drive extends SubsystemBase {
   // TODO: Measure these values!
   public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
