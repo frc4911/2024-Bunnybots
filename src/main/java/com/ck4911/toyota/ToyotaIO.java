@@ -12,17 +12,18 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ToyotaIO {
   @AutoLog
   public static class ToyotaIOInputs {
-    public double armAbsolutePositionRad = 0.0;
-    public double armRelativePositionRad = 0.0;
-    public double armInternalPositionRad = 0.0;
-    public double armRelativeVelocityRadPerSec = 0.0;
-    public double armInternalVelocityRadPerSec = 0.0;
+    public boolean armConnected = true;
+    public double armPositionRad = 0.0;
+    public double armVelocityRadPerSec = 0.0;
     public double armAppliedVolts = 0.0;
     public double[] armCurrentAmps = new double[] {};
     public double[] armTempCelcius = new double[] {};
 
+    public boolean rollerConnected = true;
+    public double rollerVelocityRadPerSec = 0.0;
     public double rollerAppliedVolts = 0.0;
     public double[] rollerCurrentAmps = new double[] {};
+    public double[] rollerTempCelcius = new double[] {};
   }
 
   /** Updates the set of loggable inputs. */
