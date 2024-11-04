@@ -12,7 +12,7 @@ import javax.inject.Inject;
 public final class ToyotaIOReal implements ToyotaIO {
 
   @Inject
-  public ToyotaIOReal() {
+  public ToyotaIOReal(ToyotaConstants toyotaConstants) {
     // TODO: set up motors and encoders here
   }
 

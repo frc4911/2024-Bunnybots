@@ -16,6 +16,17 @@ import javax.inject.Provider;
 public interface DriveModule {
 
   @Provides
+  public static DriveConstants provideDriveConstants() {
+    return DriveConstantsBuilder.builder()
+        .gyroId(1)
+        .frontLeftId(3)
+        .frontRightId(1)
+        .backLeftId(4)
+        .backRightId(2)
+        .build();
+  }
+
+  @Provides
   public static DriveIO providesDriveIO(
       Mode mode, Provider<DriveIOReal> realProvider, Provider<DriveIOSim> simProvider) {
     switch (mode) {

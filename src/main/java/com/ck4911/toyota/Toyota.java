@@ -9,7 +9,9 @@ package com.ck4911.toyota;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public final class Toyota extends SubsystemBase {
 
   private final ToyotaIO io;

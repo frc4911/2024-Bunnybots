@@ -12,7 +12,7 @@ import javax.inject.Inject;
 public final class TrinityIOReal implements TrinityIO {
 
   @Inject
-  public TrinityIOReal() {
+  public TrinityIOReal(TrinityConstants trinityConstants) {
     // TODO: set up motors and encoders here
   }
 

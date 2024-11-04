@@ -8,6 +8,8 @@
 package com.ck4911.trinity;
 
 import com.ck4911.Constants.Mode;
+import com.ck4911.grabber.GrabberConstants;
+import com.ck4911.grabber.GrabberConstantsBuilder;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Provider;
@@ -16,8 +18,13 @@ import javax.inject.Provider;
 public interface TrinityModule {
 
   @Provides
+  public static GrabberConstants provideGrabberConstants() {
+    return GrabberConstantsBuilder.builder().armMotorId(31).build();
+  }
+
+  @Provides
   public static TrinityIO providesHopperIO(
-      Mode mode, Provider<TrinityIOReal> realProvider, Provider<HopperIOSim> simProvider) {
+      Mode mode, Provider<TrinityIOReal> realProvider, Provider<TrinityIOSim> simProvider) {
     switch (mode) {
       case REAL:
         return realProvider.get();

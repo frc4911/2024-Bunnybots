@@ -20,8 +20,8 @@ public final class TrinityIOSim implements TrinityIO {
   private double armAppliedVolts = 0.0;
 
   @Inject
-  public HopperIOSim() {
-    System.out.println("[Init] Creating TrinityIOSim");
+  public TrinityIOSim() {
+    System.out.println("[Init] Creating HopperIOSim");
     armSim.setState(VecBuilder.fill(Math.PI / 2.0, 0.0));
   }
 
