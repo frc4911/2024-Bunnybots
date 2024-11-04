@@ -32,7 +32,7 @@ public final class Drive extends SubsystemBase {
 
   private final DriveIO io;
   private final DriveConstants constants;
-  private final DriveIO.DriveIOInputs inputs;
+  private final DriveIOInputsAutoLogged inputs;
   private final DifferentialDriveOdometry odometry;
   private final DifferentialDriveKinematics kinematics;
   private final SimpleMotorFeedforward feedforward;
