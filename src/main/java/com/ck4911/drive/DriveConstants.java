@@ -11,4 +11,10 @@ import io.soabase.recordbuilder.core.RecordBuilder;
 
 @RecordBuilder
 public record DriveConstants(
-    int frontRightId, int backRightId, int frontLeftId, int backLeftId, int gyroId) {}
+    int frontRightId,
+    int backRightId,
+    int frontLeftId,
+    int backLeftId,
+    int gyroId,
+    double wheelRadius, 
+    double trackWidth) {}
