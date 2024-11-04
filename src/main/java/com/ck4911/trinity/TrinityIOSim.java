@@ -34,7 +34,7 @@ public final class TrinityIOSim implements TrinityIO {
   }
 
   @Override
-  public void setArmVoltage(double voltage) {
+  public void runVolts(double voltage) {
     armAppliedVolts = MathUtil.clamp(voltage, -12.0, 12.0);
     armSim.setInputVoltage(armAppliedVolts);
   }

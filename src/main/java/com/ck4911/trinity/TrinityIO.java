@@ -12,22 +12,29 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TrinityIO {
   @AutoLog
   public static class TrinityIOInputs {
-    public double armAbsolutePositionRad = 0.0;
-    public double armRelativePositionRad = 0.0;
-    public double armInternalPositionRad = 0.0;
-    public double armRelativeVelocityRadPerSec = 0.0;
-    public double armInternalVelocityRadPerSec = 0.0;
-    public double armAppliedVolts = 0.0;
-    public double[] armCurrentAmps = new double[] {};
-    public double[] armTempCelcius = new double[] {};
+    public boolean isMotorConnected = true;
+    public double positionRads = 0.0;
+    public double velocityRadsPerSec = 0.0;
+    public double[] appliedVolts = new double[] {};
+    public double[] torqueCurrentAmps = new double[] {};
+    public double[] tempCelcius = new double[] {};
   }
 
   /** Updates the set of loggable inputs. */
   public default void updateInputs(TrinityIOInputs inputs) {}
 
-  /** Set the arm motor voltage */
-  public default void setArmVoltage(double volts) {}
+  /** Run to setpoint angle in radians */
+  default void runSetpoint(double setpointRads, double feedforward) {}
 
-  /** Enable or disable brake mode on the motors. */
-  public default void setBrakeMode(boolean armBrake) {}
+  /** Run motors at volts */
+  default void runVolts(double volts) {}
+
+  /** Run motors at current */
+  default void runCurrent(double amps) {}
+
+  /** Set brake mode enabled */
+  default void setBrakeMode(boolean enabled) {}
+
+  /** Set PID values */
+  default void setPID(double p, double i, double d) {}
 }
