@@ -140,25 +140,25 @@ public final class Drive extends SubsystemBase {
   /** Returns the position of the left wheels in meters. */
   @AutoLogOutput
   public double getLeftPositionMeters() {
-    return inputs.leftPositionRad * WHEEL_RADIUS;
+    return inputs.leftPositionRad * constants.wheelRadius();
   }
 
   /** Returns the position of the right wheels in meters. */
   @AutoLogOutput
   public double getRightPositionMeters() {
-    return inputs.rightPositionRad * WHEEL_RADIUS;
+    return inputs.rightPositionRad * constants.wheelRadius();
   }
 
   /** Returns the velocity of the left wheels in meters/second. */
   @AutoLogOutput
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRadPerSec * WHEEL_RADIUS;
+    return inputs.leftVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the velocity of the right wheels in meters/second. */
   @AutoLogOutput
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRadPerSec * WHEEL_RADIUS;
+    return inputs.rightVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the average velocity in radians/second. */
