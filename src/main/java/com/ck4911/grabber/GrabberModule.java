@@ -16,6 +16,11 @@ import javax.inject.Provider;
 public interface GrabberModule {
 
   @Provides
+  public static GrabberConstants provideGrabberConstants() {
+    return GrabberConstantsBuilder.builder().armMotorId(31).build();
+  }
+
+  @Provides
   public static GrabberIO providesGrabberIO(
       Mode mode, Provider<GrabberIOReal> realProvider, Provider<GrabberIOSim> simProvider) {
     switch (mode) {

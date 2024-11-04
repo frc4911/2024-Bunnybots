@@ -7,17 +7,15 @@
 
 package com.ck4911.grabber;
 
-import javax.inject.Inject;
 import com.ctre.phoenix6.hardware.TalonFX;
+import javax.inject.Inject;
 
 public final class GrabberIOReal implements GrabberIO {
-  private final TalonFX axle;
-  private final TalonFX roller;
+  private final TalonFX arm;
 
   @Inject
-  public GrabberIOReal() {
-    axle = new TalonFX(GrabberConstants.AXLE_ID);
-    roller = new TalonFX(GrabberConstants.ROLLER_ID);
+  public GrabberIOReal(GrabberConstants grabberConstants) {
+    arm = new TalonFX(grabberConstants.armMotorId());
   }
 
   @Override

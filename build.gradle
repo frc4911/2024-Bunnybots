@@ -74,6 +74,9 @@ def includeDesktopSupport = false
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
 dependencies {
+    annotationProcessor(libs.record.builder.processor)
+    compileOnly(libs.record.builder.core)
+    
     implementation(libs.dagger)
     annotationProcessor(libs.dagger.compiler)
 
@@ -148,8 +151,8 @@ project.compileJava.dependsOn(spotlessApply)
 spotless {
     java {
         target fileTree(".") {
-            include "src/java/**/*.java"
-            exclude "**/build/**", "**/build-*/**", "src/main/java/com/ck4911/BuildConstants.java"
+            include "**/*.java"
+            exclude ".gradle/**", "**/build/**", "**/build-*/**", "src/main/java/com/ck4911/BuildConstants.java"
         }
         toggleOffOn()
         googleJavaFormat()

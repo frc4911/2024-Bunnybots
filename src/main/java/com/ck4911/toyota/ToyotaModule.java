@@ -16,6 +16,11 @@ import javax.inject.Provider;
 public interface ToyotaModule {
 
   @Provides
+  public static ToyotaConstants provideToyotaConstants() {
+    return ToyotaConstantsBuilder.builder().armMotorId(41).rollerMotorId(42).build();
+  }
+
+  @Provides
   public static ToyotaIO providesToyotaIO(
       Mode mode, Provider<ToyotaIOReal> realProvider, Provider<ToyotaIOSim> simProvider) {
     switch (mode) {
