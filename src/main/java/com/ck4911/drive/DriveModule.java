@@ -8,6 +8,7 @@
 package com.ck4911.drive;
 
 import com.ck4911.Constants.Mode;
+import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import dagger.Module;
 import dagger.Provides;
@@ -65,34 +66,34 @@ public interface DriveModule {
   @Provides
   @Singleton
   public static Pigeon2 providePigeon2(DriveConstants constants) {
-    return new Pigeon2(driveConstants.gyroId());
+    return new Pigeon2(constants.gyroId());
   }
 
   @Provides
   @Location(Corner.FRONT_LEFT)
   @Singleton
   public static CANSparkFlex provideFrontLeftMotor(DriveConstants constants) {
-    return new CANSparkFlex(driveConstants.frontLeftId(), MotorType.kBrushless);
+    return new CANSparkFlex(constants.frontLeftId(), MotorType.kBrushless);
   }
 
   @Provides
   @Location(Corner.FRONT_RIGHT)
   @Singleton
   public static CANSparkFlex provideFrontRightMotor(DriveConstants constants) {
-    return new CANSparkFlex(driveConstants.frontRightId(), MotorType.kBrushless);
+    return new CANSparkFlex(constants.frontRightId(), MotorType.kBrushless);
   }
 
   @Provides
   @Location(Corner.BACK_LEFT)
   @Singleton
   public static CANSparkFlex provideBackLeftMotor(DriveConstants constants) {
-    return new CANSparkFlex(driveConstants.backLeftId(), MotorType.kBrushless);
+    return new CANSparkFlex(constants.backLeftId(), MotorType.kBrushless);
   }
 
   @Provides
   @Location(Corner.BACK_RIGHT)
   @Singleton
   public static CANSparkFlex provideBackRightMotor(DriveConstants constants) {
-    return new CANSparkFlex(driveConstants.backRightId(), MotorType.kBrushless);
+    return new CANSparkFlex(constants.backRightId(), MotorType.kBrushless);
   }
 }
