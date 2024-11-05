@@ -16,5 +16,6 @@ public record DriveConstants(
     int frontLeftId,
     int backLeftId,
     int gyroId,
-    double wheelRadius, 
+    double gearRatio,
+    double wheelRadius,
     double trackWidth) {}

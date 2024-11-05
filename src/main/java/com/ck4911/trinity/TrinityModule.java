@@ -7,9 +7,9 @@
 
 package com.ck4911.trinity;
 
-import com.ck4911.Constants.Mode;
 import com.ck4911.grabber.GrabberConstants;
 import com.ck4911.grabber.GrabberConstantsBuilder;
+import com.ck4911.robot.Mode;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Provider;

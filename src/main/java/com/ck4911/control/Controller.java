@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.drive;
+package com.ck4911.control;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -15,14 +15,12 @@ import javax.inject.Qualifier;
 @Qualifier
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Location {
+public @interface Controller {
 
-  public enum Corner {
-    FRONT_LEFT,
-    FRONT_RIGHT,
-    BACK_LEFT,
-    BACK_RIGHT
+  public enum Role {
+    DRIVER,
+    OPERATOR
   }
 
-  Corner value();
+  Role value();
 }

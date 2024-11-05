@@ -8,9 +8,11 @@
 package com.ck4911.control;
 
 import com.ck4911.commands.VirtualSubsystem;
+import com.ck4911.control.Controller.Role;
 import com.ck4911.drive.Drive;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
+import com.ck4911.util.Alerts;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -20,20 +22,27 @@ import javax.inject.Singleton;
 
 @Singleton
 public final class ControllerBinding implements VirtualSubsystem {
-  private final Alert driverDisconnected =
-      new Alert("Driver controller disconnected (port 0).", AlertType.WARNING);
-  private final Alert operatorDisconnected =
-      new Alert("Operator controller disconnected (port 1).", AlertType.WARNING);
+  private final Alert driverDisconnected;
+  private final Alert operatorDisconnected;
 
   private final CommandXboxController driver;
   private final CommandXboxController operator;
   private final Drive drive;
 
   @Inject
-  public ControllerBinding(Drive drive) {
-    driver = new CommandXboxController(0);
-    operator = new CommandXboxController(1);
+  public ControllerBinding(
+      Drive drive,
+      @Controller(Role.DRIVER) CommandXboxController driver,
+      @Controller(Role.OPERATOR) CommandXboxController operator,
+      Alerts alerts) {
     this.drive = drive;
+    this.driver = driver;
+    this.operator = operator;
+
+    driverDisconnected =
+        alerts.create("Driver controller disconnected (port 0).", AlertType.WARNING);
+    operatorDisconnected =
+        alerts.create("Operator controller disconnected (port 1).", AlertType.WARNING);
 
     setupControls();
   }

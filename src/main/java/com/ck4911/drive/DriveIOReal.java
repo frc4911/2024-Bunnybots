@@ -7,6 +7,7 @@
 
 package com.ck4911.drive;
 
+import com.ck4911.drive.Location.Corner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
@@ -37,7 +38,7 @@ public class DriveIOReal implements DriveIO {
 
   @Inject
   public DriveIOReal(
-      Pigeon2 pigeon, 
+      Pigeon2 pigeon,
       @Location(Corner.FRONT_LEFT) CANSparkFlex leftLeader,
       @Location(Corner.FRONT_RIGHT) CANSparkFlex rightLeader,
       @Location(Corner.BACK_LEFT) CANSparkFlex leftFollower,

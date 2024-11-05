@@ -10,10 +10,21 @@ package com.ck4911.auto;
 import com.ck4911.commands.VirtualSubsystem;
 import dagger.Binds;
 import dagger.Module;
+import dagger.Provides;
 import dagger.multibindings.IntoSet;
+import edu.wpi.first.wpilibj2.command.Command;
+import javax.inject.Singleton;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 @Module
 public interface AutoModule {
+
+  @Provides
+  @Singleton
+  public static LoggedDashboardChooser<Command> provideChooser() {
+    return new LoggedDashboardChooser<Command>("Auto Routine");
+  }
+
   @Binds
   @IntoSet
   public VirtualSubsystem bindsAutoCommandHandler(AutoCommandHandler autoCommandHandler);

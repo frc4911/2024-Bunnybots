@@ -35,9 +35,9 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private Command currentAutoCommand;
 
   @Inject
-  public AutoCommandHandler(Drive drive) {
+  public AutoCommandHandler(Drive drive, LoggedDashboardChooser<Command> chooser) {
     this.drive = drive;
-    chooser = new LoggedDashboardChooser<Command>("Auto Routine");
+    this.chooser = chooser;
 
     // Configure AutoBuilder for PathPlanner
     AutoBuilder.configureRamsete(
