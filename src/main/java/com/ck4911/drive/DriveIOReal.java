@@ -43,8 +43,8 @@ public class DriveIOReal implements DriveIO {
       @Location(Corner.FRONT_RIGHT) CANSparkFlex rightLeader,
       @Location(Corner.BACK_LEFT) CANSparkFlex leftFollower,
       @Location(Corner.BACK_RIGHT) CANSparkFlex rightFollower) {
-    this.pigeon = pigeon,
-    this.leftLeader = leftLeader,
+    this.pigeon = pigeon;
+    this.leftLeader = leftLeader;
     this.rightLeader = rightLeader;
     this.leftFollower = leftFollower;
     this.rightFollower = rightFollower;
