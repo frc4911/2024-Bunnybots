@@ -41,13 +41,18 @@ public final class Drive extends SubsystemBase {
   private final SysIdRoutine sysId;
 
   @Inject
-  public Drive(Mode mode, DriveIO io, DriveConstants constants) {
+  public Drive(
+      Mode mode,
+      DriveIO io,
+      DriveConstants constants,
+      DriveIOInputsAutoLogged inputs,
+      DifferentialDriveOdometry odometry,
+      DifferentialDriveKinematics kinematics) {
     this.io = io;
     this.constants = constants;
-
-    inputs = new DriveIOInputsAutoLogged();
-    odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
-    kinematics = new DifferentialDriveKinematics(constants.trackWidth());
+    this.inputs = inputs;
+    this.odometry = odometry;
+    this.kinematics = kinematics;
 
     // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
     // Consider using SysId routines
