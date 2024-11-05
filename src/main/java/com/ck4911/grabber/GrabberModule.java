@@ -7,7 +7,7 @@
 
 package com.ck4911.grabber;
 
-import com.ck4911.Constants.Mode;
+import com.ck4911.robot.Mode;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Provider;

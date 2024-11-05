@@ -8,10 +8,10 @@
 package com.ck4911.robot;
 
 import com.ck4911.BuildConstants;
-import com.ck4911.Constants.Mode;
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
+import com.ck4911.util.Alerts;
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
@@ -55,16 +55,10 @@ public class CyberKnightsRobot extends LoggedRobot {
   private double teleStart;
   private static double teleElapsedTime = 0.0;
 
-  private final Alert canErrorAlert =
-      new Alert("CAN errors detected, robot may not be controllable.", AlertType.ERROR);
-  private final Alert canivoreErrorAlert =
-      new Alert("CANivore error detected, robot may not be controllable.", AlertType.ERROR);
-  private final Alert lowBatteryAlert =
-      new Alert(
-          "Battery voltage is very low, consider turning off the robot or replacing the battery.",
-          AlertType.WARNING);
-  private final Alert gcAlert =
-      new Alert("Please wait to enable, collecting garbage. ", AlertType.WARNING);
+  private final Alert canErrorAlert;
+  private final Alert canivoreErrorAlert;
+  private final Alert lowBatteryAlert;
+  private final Alert gcAlert;
 
   public static Trigger createTeleopTimeTrigger(DoubleSupplier teleElapsedTime) {
     return new Trigger(
@@ -88,6 +82,7 @@ public class CyberKnightsRobot extends LoggedRobot {
       @Named("RobotName") String robotName,
       @Named("TuningMode") boolean tuningMode,
       Mode robotMode,
+      Alerts alerts,
       Provider<RobotContainer> containerProvider) {
     super();
     this.scheduler = scheduler;
@@ -96,6 +91,16 @@ public class CyberKnightsRobot extends LoggedRobot {
     this.tuningMode = tuningMode;
     this.robotMode = robotMode;
     this.containerProvider = containerProvider;
+
+    canErrorAlert =
+        alerts.create("CAN errors detected, robot may not be controllable.", AlertType.ERROR);
+    canivoreErrorAlert =
+        alerts.create("CANivore error detected, robot may not be controllable.", AlertType.ERROR);
+    lowBatteryAlert =
+        alerts.create(
+            "Battery voltage is very low, consider turning off the robot or replacing the battery.",
+            AlertType.WARNING);
+    gcAlert = alerts.create("Please wait to enable, collecting garbage. ", AlertType.WARNING);
   }
 
   /**

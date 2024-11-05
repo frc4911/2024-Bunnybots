@@ -7,12 +7,12 @@
 
 package com.ck4911.drive;
 
+import com.ck4911.drive.Location.Corner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,14 +37,19 @@ public class DriveIOReal implements DriveIO {
   private final StatusSignal<Double> yaw;
 
   @Inject
-  public DriveIOReal(DriveConstants driveConstants) {
-    pigeon = new Pigeon2(driveConstants.gyroId());
-    yaw = pigeon.getYaw();
+  public DriveIOReal(
+      Pigeon2 pigeon,
+      @Location(Corner.FRONT_LEFT) CANSparkFlex leftLeader,
+      @Location(Corner.FRONT_RIGHT) CANSparkFlex rightLeader,
+      @Location(Corner.BACK_LEFT) CANSparkFlex leftFollower,
+      @Location(Corner.BACK_RIGHT) CANSparkFlex rightFollower) {
+    this.pigeon = pigeon;
+    this.leftLeader = leftLeader;
+    this.rightLeader = rightLeader;
+    this.leftFollower = leftFollower;
+    this.rightFollower = rightFollower;
 
-    leftLeader = new CANSparkFlex(driveConstants.frontLeftId(), MotorType.kBrushless);
-    rightLeader = new CANSparkFlex(driveConstants.frontRightId(), MotorType.kBrushless);
-    leftFollower = new CANSparkFlex(driveConstants.backLeftId(), MotorType.kBrushless);
-    rightFollower = new CANSparkFlex(driveConstants.backRightId(), MotorType.kBrushless);
+    yaw = pigeon.getYaw();
 
     leftEncoder = leftLeader.getEncoder();
     rightEncoder = rightLeader.getEncoder();

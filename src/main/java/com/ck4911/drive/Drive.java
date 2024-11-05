@@ -9,15 +9,13 @@ package com.ck4911.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
-import com.ck4911.Constants.Mode;
+import com.ck4911.robot.Mode;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,13 +39,18 @@ public final class Drive extends SubsystemBase {
   private final SysIdRoutine sysId;
 
   @Inject
-  public Drive(Mode mode, DriveIO io, DriveConstants constants) {
+  public Drive(
+      Mode mode,
+      DriveIO io,
+      DriveConstants constants,
+      DriveIOInputsAutoLogged inputs,
+      DifferentialDriveOdometry odometry,
+      DifferentialDriveKinematics kinematics) {
     this.io = io;
     this.constants = constants;
-
-    inputs = new DriveIOInputsAutoLogged();
-    odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
-    kinematics = new DifferentialDriveKinematics(constants.trackWidth());
+    this.inputs = inputs;
+    this.odometry = odometry;
+    this.kinematics = kinematics;
 
     // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
     // Consider using SysId routines
