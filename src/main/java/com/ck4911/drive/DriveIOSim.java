@@ -15,13 +15,14 @@ import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import javax.inject.Inject;
 
-public class DriveIOSim implements DriveIO {
+public final class DriveIOSim implements DriveIO {
   private static final double KP = 0.2;
   private static final double KD = 0.0;
+
+  private final DriveConstants constants;
   private DifferentialDrivetrainSim sim =
       DifferentialDrivetrainSim.createKitbotSim(
           KitbotMotor.kDualCIMPerSide, KitbotGearing.k10p71, KitbotWheelSize.kSixInch, null);
-
   private double leftAppliedVolts = 0.0;
   private double rightAppliedVolts = 0.0;
   private boolean closedLoop = false;
@@ -31,20 +32,22 @@ public class DriveIOSim implements DriveIO {
   private double rightFFVolts = 0.0;
 
   @Inject
-  public DriveIOSim() {}
+  public DriveIOSim(DriveConstants constants) {
+    this.constants = constants;
+  }
 
   @Override
   public void updateInputs(DriveIOInputs inputs) {
     if (closedLoop) {
       leftAppliedVolts =
           MathUtil.clamp(
-              leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / Drive.WHEEL_RADIUS)
+              leftPID.calculate(sim.getLeftVelocityMetersPerSecond() / constants.wheelRadius())
                   + leftFFVolts,
               -12.0,
               12.0);
       rightAppliedVolts =
           MathUtil.clamp(
-              leftPID.calculate(sim.getRightVelocityMetersPerSecond() / Drive.WHEEL_RADIUS)
+              leftPID.calculate(sim.getRightVelocityMetersPerSecond() / constants.wheelRadius())
                   + rightFFVolts,
               -12.0,
               12.0);
@@ -52,13 +55,13 @@ public class DriveIOSim implements DriveIO {
     }
 
     sim.update(0.02);
-    inputs.leftPositionRad = sim.getLeftPositionMeters() / Drive.WHEEL_RADIUS;
-    inputs.leftVelocityRadPerSec = sim.getLeftVelocityMetersPerSecond() / Drive.WHEEL_RADIUS;
+    inputs.leftPositionRad = sim.getLeftPositionMeters() / constants.wheelRadius();
+    inputs.leftVelocityRadPerSec = sim.getLeftVelocityMetersPerSecond() / constants.wheelRadius();
     inputs.leftAppliedVolts = leftAppliedVolts;
     inputs.leftCurrentAmps = new double[] {sim.getLeftCurrentDrawAmps()};
 
-    inputs.rightPositionRad = sim.getRightPositionMeters() / Drive.WHEEL_RADIUS;
-    inputs.rightVelocityRadPerSec = sim.getRightVelocityMetersPerSecond() / Drive.WHEEL_RADIUS;
+    inputs.rightPositionRad = sim.getRightPositionMeters() / constants.wheelRadius();
+    inputs.rightVelocityRadPerSec = sim.getRightVelocityMetersPerSecond() / constants.wheelRadius();
     inputs.rightAppliedVolts = rightAppliedVolts;
     inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
 

@@ -29,27 +29,28 @@ import org.littletonrobotics.junction.Logger;
 
 @Singleton
 public final class Drive extends SubsystemBase {
-  // TODO: Measure these values!
-  public static final double WHEEL_RADIUS = Units.inchesToMeters(3.0);
-  public static final double TRACK_WIDTH = Units.inchesToMeters(26.0);
 
   private final DriveIO io;
-  private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
-  private final DifferentialDriveOdometry odometry =
-      new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
-  private final DifferentialDriveKinematics kinematics =
-      new DifferentialDriveKinematics(TRACK_WIDTH);
+  private final DriveConstants constants;
+  private final DriveIOInputsAutoLogged inputs;
+  private final DifferentialDriveOdometry odometry;
+  private final DifferentialDriveKinematics kinematics;
   private final SimpleMotorFeedforward feedforward;
   private final double ks;
   private final double kv;
   private final SysIdRoutine sysId;
 
   @Inject
-  public Drive(Mode mode, DriveIO io) {
+  public Drive(Mode mode, DriveIO io, DriveConstants constants) {
     this.io = io;
+    this.constants = constants;
+
+    inputs = new DriveIOInputsAutoLogged();
+    odometry = new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
+    kinematics = new DifferentialDriveKinematics(constants.trackWidth());
 
     // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
-    // Consider using SysId routines defined in RobotContainer
+    // Consider using SysId routines
     ks = mode == Mode.SIM ? 0.0 : 0.0;
     kv = mode == Mode.SIM ? 0.227 : 0.0;
     feedforward = new SimpleMotorFeedforward(ks, kv);
@@ -84,8 +85,8 @@ public final class Drive extends SubsystemBase {
   public void driveVelocity(double leftMetersPerSec, double rightMetersPerSec) {
     Logger.recordOutput("Drive/LeftVelocitySetpointMetersPerSec", leftMetersPerSec);
     Logger.recordOutput("Drive/RightVelocitySetpointMetersPerSec", rightMetersPerSec);
-    double leftRadPerSec = leftMetersPerSec / WHEEL_RADIUS;
-    double rightRadPerSec = rightMetersPerSec / WHEEL_RADIUS;
+    double leftRadPerSec = leftMetersPerSec / constants.wheelRadius();
+    double rightRadPerSec = rightMetersPerSec / constants.wheelRadius();
     io.setVelocity(
         leftRadPerSec,
         rightRadPerSec,
@@ -139,25 +140,25 @@ public final class Drive extends SubsystemBase {
   /** Returns the position of the left wheels in meters. */
   @AutoLogOutput
   public double getLeftPositionMeters() {
-    return inputs.leftPositionRad * WHEEL_RADIUS;
+    return inputs.leftPositionRad * constants.wheelRadius();
   }
 
   /** Returns the position of the right wheels in meters. */
   @AutoLogOutput
   public double getRightPositionMeters() {
-    return inputs.rightPositionRad * WHEEL_RADIUS;
+    return inputs.rightPositionRad * constants.wheelRadius();
   }
 
   /** Returns the velocity of the left wheels in meters/second. */
   @AutoLogOutput
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRadPerSec * WHEEL_RADIUS;
+    return inputs.leftVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the velocity of the right wheels in meters/second. */
   @AutoLogOutput
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRadPerSec * WHEEL_RADIUS;
+    return inputs.rightVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the average velocity in radians/second. */
