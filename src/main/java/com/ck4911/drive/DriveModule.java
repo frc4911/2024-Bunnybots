@@ -8,6 +8,7 @@
 package com.ck4911.drive;
 
 import com.ck4911.Constants.Mode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Provider;
