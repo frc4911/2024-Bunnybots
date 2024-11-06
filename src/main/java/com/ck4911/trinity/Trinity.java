@@ -5,17 +5,17 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.hopper;
+package com.ck4911.trinity;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import javax.inject.Inject;
 
-public final class Hopper extends SubsystemBase {
+public final class Trinity extends SubsystemBase {
 
-  private final HopperIO io;
+  private final TrinityIO io;
 
   @Inject
-  public Hopper(HopperIO io) {
+  public Trinity(TrinityIO io) {
     this.io = io;
   }
 }
