@@ -59,7 +59,7 @@ public final class ControllerBinding implements VirtualSubsystem {
 
   private void setupControls() {
     drive.setDefaultCommand(
-        Commands.run(() -> drive.driveArcade(-driver.getLeftY(), driver.getLeftX()), drive));
+        Commands.run(() -> drive.driveArcade(-driver.getLeftY(), -driver.getRightX()), drive));
   }
 
   public void setDriverRumble(boolean enabled) {
