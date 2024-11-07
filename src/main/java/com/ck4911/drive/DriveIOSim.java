@@ -10,9 +10,6 @@ package com.ck4911.drive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
-import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import javax.inject.Inject;
 
 public final class DriveIOSim implements DriveIO {
@@ -20,9 +17,7 @@ public final class DriveIOSim implements DriveIO {
   private static final double KD = 0.0;
 
   private final DriveConstants constants;
-  private DifferentialDrivetrainSim sim =
-      DifferentialDrivetrainSim.createKitbotSim(
-          KitbotMotor.kDualCIMPerSide, KitbotGearing.k10p71, KitbotWheelSize.kSixInch, null);
+  private final DifferentialDrivetrainSim sim;
   private double leftAppliedVolts = 0.0;
   private double rightAppliedVolts = 0.0;
   private boolean closedLoop = false;
@@ -32,8 +27,9 @@ public final class DriveIOSim implements DriveIO {
   private double rightFFVolts = 0.0;
 
   @Inject
-  public DriveIOSim(DriveConstants constants) {
+  public DriveIOSim(DriveConstants constants, DifferentialDrivetrainSim sim) {
     this.constants = constants;
+    this.sim = sim;
   }
 
   @Override
@@ -64,8 +60,6 @@ public final class DriveIOSim implements DriveIO {
     inputs.rightVelocityRadPerSec = sim.getRightVelocityMetersPerSecond() / constants.wheelRadius();
     inputs.rightAppliedVolts = rightAppliedVolts;
     inputs.rightCurrentAmps = new double[] {sim.getRightCurrentDrawAmps()};
-
-    inputs.gyroYaw = sim.getHeading();
   }
 
   @Override

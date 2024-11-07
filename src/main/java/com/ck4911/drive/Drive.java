@@ -28,9 +28,11 @@ import org.littletonrobotics.junction.Logger;
 @Singleton
 public final class Drive extends SubsystemBase {
 
-  private final DriveIO io;
+  private final GyroIO gyroIo;
+  private final GyroIOInputsAutoLogged gyroInputs;
+  private final DriveIO driveIo;
   private final DriveConstants constants;
-  private final DriveIOInputsAutoLogged inputs;
+  private final DriveIOInputsAutoLogged driveInputs;
   private final DifferentialDriveOdometry odometry;
   private final DifferentialDriveKinematics kinematics;
   private final SimpleMotorFeedforward feedforward;
@@ -41,14 +43,18 @@ public final class Drive extends SubsystemBase {
   @Inject
   public Drive(
       Mode mode,
-      DriveIO io,
+      GyroIO gyroIo,
+      GyroIOInputsAutoLogged gyroInputs,
+      DriveIO driveIo,
       DriveConstants constants,
-      DriveIOInputsAutoLogged inputs,
+      DriveIOInputsAutoLogged driveInputs,
       DifferentialDriveOdometry odometry,
       DifferentialDriveKinematics kinematics) {
-    this.io = io;
+    this.gyroIo = gyroIo;
+    this.gyroInputs = gyroInputs;
+    this.driveIo = driveIo;
     this.constants = constants;
-    this.inputs = inputs;
+    this.driveInputs = driveInputs;
     this.odometry = odometry;
     this.kinematics = kinematics;
 
@@ -72,16 +78,19 @@ public final class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Drive", inputs);
+    driveIo.updateInputs(driveInputs);
+    gyroIo.updateInputs(gyroInputs);
+
+    Logger.processInputs("Drive", driveInputs);
+    Logger.processInputs("Gyro", gyroInputs);
 
     // Update odometry
-    odometry.update(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters());
+    odometry.update(gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters());
   }
 
   /** Run open loop at the specified voltage. */
   public void driveVolts(double leftVolts, double rightVolts) {
-    io.setVoltage(leftVolts, rightVolts);
+    driveIo.setVoltage(leftVolts, rightVolts);
   }
 
   /** Run closed loop at the specified voltage. */
@@ -90,7 +99,7 @@ public final class Drive extends SubsystemBase {
     Logger.recordOutput("Drive/RightVelocitySetpointMetersPerSec", rightMetersPerSec);
     double leftRadPerSec = leftMetersPerSec / constants.wheelRadius();
     double rightRadPerSec = rightMetersPerSec / constants.wheelRadius();
-    io.setVelocity(
+    driveIo.setVelocity(
         leftRadPerSec,
         rightRadPerSec,
         feedforward.calculate(leftRadPerSec),
@@ -100,12 +109,12 @@ public final class Drive extends SubsystemBase {
   /** Run open loop based on stick positions. */
   public void driveArcade(double xSpeed, double zRotation) {
     var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
-    io.setVoltage(speeds.left * 12.0, speeds.right * 12.0);
+    driveIo.setVoltage(speeds.left * 12.0, speeds.right * 12.0);
   }
 
   /** Stops the drive. */
   public void stop() {
-    io.setVoltage(0.0, 0.0);
+    driveIo.setVoltage(0.0, 0.0);
   }
 
   /** Returns a command to run a quasistatic test in the specified direction. */
@@ -126,7 +135,8 @@ public final class Drive extends SubsystemBase {
 
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
-    odometry.resetPosition(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+    odometry.resetPosition(
+        gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters(), pose);
   }
 
   public ChassisSpeeds getSpeeds() {
@@ -143,29 +153,29 @@ public final class Drive extends SubsystemBase {
   /** Returns the position of the left wheels in meters. */
   @AutoLogOutput
   public double getLeftPositionMeters() {
-    return inputs.leftPositionRad * constants.wheelRadius();
+    return driveInputs.leftPositionRad * constants.wheelRadius();
   }
 
   /** Returns the position of the right wheels in meters. */
   @AutoLogOutput
   public double getRightPositionMeters() {
-    return inputs.rightPositionRad * constants.wheelRadius();
+    return driveInputs.rightPositionRad * constants.wheelRadius();
   }
 
   /** Returns the velocity of the left wheels in meters/second. */
   @AutoLogOutput
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRadPerSec * constants.wheelRadius();
+    return driveInputs.leftVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the velocity of the right wheels in meters/second. */
   @AutoLogOutput
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRadPerSec * constants.wheelRadius();
+    return driveInputs.rightVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the average velocity in radians/second. */
   public double getCharacterizationVelocity() {
-    return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
+    return (driveInputs.leftVelocityRadPerSec + driveInputs.rightVelocityRadPerSec) / 2.0;
   }
 }

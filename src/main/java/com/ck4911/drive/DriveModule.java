@@ -9,7 +9,6 @@ package com.ck4911.drive;
 
 import com.ck4911.drive.Location.Corner;
 import com.ck4911.robot.Mode;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import dagger.Module;
@@ -17,6 +16,10 @@ import dagger.Provides;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
+import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotWheelSize;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
@@ -36,7 +39,6 @@ public interface DriveModule {
   }
 
   @Provides
-  @Singleton
   public static DriveIO providesDriveIO(
       Mode mode, Provider<DriveIOReal> realProvider, Provider<DriveIOSim> simProvider) {
     switch (mode) {
@@ -52,7 +54,6 @@ public interface DriveModule {
   }
 
   @Provides
-  @Singleton
   public static DriveIOInputsAutoLogged provideDriveIOInputsAutoLogged() {
     return new DriveIOInputsAutoLogged();
   }
@@ -63,43 +64,60 @@ public interface DriveModule {
   }
 
   @Provides
-  @Singleton
   public static DifferentialDriveKinematics provideDifferentialDriveKinematics(
       DriveConstants constants) {
     return new DifferentialDriveKinematics(constants.trackWidth());
   }
 
   @Provides
-  @Singleton
-  public static Pigeon2 providePigeon2(DriveConstants constants) {
-    return new Pigeon2(constants.gyroId());
+  public static GyroIO provideGyro(
+      Mode mode, Provider<GyroIOReal> realProvider, Provider<GyrIOSim> simProvider) {
+    switch (mode) {
+      case REAL:
+        // TODO: when the pigeon is installed, enable this next line.
+        // return realProvider.get();
+        return new GyroIO() {};
+      case SIM:
+        return simProvider.get();
+      default:
+        return new GyroIO() {};
+    }
+  }
+
+  @Provides
+  public static GyroIOInputsAutoLogged provideGyroIOInputsAutoLogged() {
+    return new GyroIOInputsAutoLogged();
   }
 
   @Provides
   @Location(Corner.FRONT_LEFT)
-  @Singleton
   public static CANSparkFlex provideFrontLeftMotor(DriveConstants constants) {
     return new CANSparkFlex(constants.frontLeftId(), MotorType.kBrushless);
   }
 
   @Provides
   @Location(Corner.FRONT_RIGHT)
-  @Singleton
   public static CANSparkFlex provideFrontRightMotor(DriveConstants constants) {
     return new CANSparkFlex(constants.frontRightId(), MotorType.kBrushless);
   }
 
   @Provides
   @Location(Corner.BACK_LEFT)
-  @Singleton
   public static CANSparkFlex provideBackLeftMotor(DriveConstants constants) {
     return new CANSparkFlex(constants.backLeftId(), MotorType.kBrushless);
   }
 
   @Provides
   @Location(Corner.BACK_RIGHT)
-  @Singleton
   public static CANSparkFlex provideBackRightMotor(DriveConstants constants) {
     return new CANSparkFlex(constants.backRightId(), MotorType.kBrushless);
+  }
+
+  @Provides
+  @Singleton
+  public static DifferentialDrivetrainSim provideDifferentialDrivetrainSim() {
+    // TODO: directly invoke DifferentialDrivetrainSim constructor using correct motors, etc.
+    return DifferentialDrivetrainSim.createKitbotSim(
+        KitbotMotor.kDualCIMPerSide, KitbotGearing.k10p71, KitbotWheelSize.kSixInch, null);
   }
 }
