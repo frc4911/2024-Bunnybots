@@ -213,7 +213,7 @@ public class CyberKnightsRobot extends LoggedRobot {
             && !canInitialErrorTimer.hasElapsed(canErrorTimeThreshold));
 
     // Log CANivore status
-    if (robotMode == Mode.REAL) {
+    if (false && robotMode == Mode.REAL) {
       var canivoreStatus = CANBus.getStatus("canivore");
       Logger.recordOutput("CANivoreStatus/Status", canivoreStatus.Status.getName());
       Logger.recordOutput("CANivoreStatus/Utilization", canivoreStatus.BusUtilization);
