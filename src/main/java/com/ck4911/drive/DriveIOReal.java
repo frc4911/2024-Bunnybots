@@ -8,14 +8,10 @@
 package com.ck4911.drive;
 
 import com.ck4911.drive.Location.Corner;
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.Pigeon2Configuration;
-import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import javax.inject.Inject;
 
@@ -33,23 +29,16 @@ public class DriveIOReal implements DriveIO {
   private final SparkPIDController leftPID;
   private final SparkPIDController rightPID;
 
-  private final Pigeon2 pigeon;
-  private final StatusSignal<Double> yaw;
-
   @Inject
   public DriveIOReal(
-      Pigeon2 pigeon,
       @Location(Corner.FRONT_LEFT) CANSparkFlex leftLeader,
       @Location(Corner.FRONT_RIGHT) CANSparkFlex rightLeader,
       @Location(Corner.BACK_LEFT) CANSparkFlex leftFollower,
       @Location(Corner.BACK_RIGHT) CANSparkFlex rightFollower) {
-    this.pigeon = pigeon;
     this.leftLeader = leftLeader;
     this.rightLeader = rightLeader;
     this.leftFollower = leftFollower;
     this.rightFollower = rightFollower;
-
-    yaw = pigeon.getYaw();
 
     leftEncoder = leftLeader.getEncoder();
     rightEncoder = rightLeader.getEncoder();
@@ -85,11 +74,6 @@ public class DriveIOReal implements DriveIO {
     rightLeader.burnFlash();
     leftFollower.burnFlash();
     rightFollower.burnFlash();
-
-    pigeon.getConfigurator().apply(new Pigeon2Configuration());
-    pigeon.getConfigurator().setYaw(0.0);
-    yaw.setUpdateFrequency(100.0);
-    pigeon.optimizeBusUtilization();
   }
 
   @Override
@@ -107,8 +91,6 @@ public class DriveIOReal implements DriveIO {
     inputs.rightAppliedVolts = rightLeader.getAppliedOutput() * rightLeader.getBusVoltage();
     inputs.rightCurrentAmps =
         new double[] {rightLeader.getOutputCurrent(), rightFollower.getOutputCurrent()};
-
-    inputs.gyroYaw = Rotation2d.fromDegrees(yaw.refresh().getValueAsDouble());
   }
 
   @Override
