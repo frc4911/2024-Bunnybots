@@ -42,8 +42,8 @@ public interface DriveModule {
     switch (mode) {
       case REAL:
         // TODO: enable this when motors are set up
-        // return realProvider.get();
-        return new DriveIO() {};
+        return realProvider.get();
+        // return new DriveIO() {};
       case SIM:
         return simProvider.get();
       default:
