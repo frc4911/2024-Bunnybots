@@ -86,7 +86,15 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
-    // Set up SysId routines
+    addCharacterizations();
+  }
+
+  private void addCharacterizations() {
+    chooser.addOption("Drive Static Characterization", drive.staticCharacterization());
+    chooser.addOption("Drive FF Characterization", drive.feedForwardCharacterization());
+  }
+
+  private void addSysIds() {
     chooser.addOption(
         "Drive SysId (Quasistatic Forward)",
         drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));

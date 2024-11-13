@@ -9,6 +9,8 @@ package com.ck4911.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ck4911.commands.FeedForwardCharacterization;
+import com.ck4911.commands.StaticCharacterization.StaticCharacterizationFactory;
 import com.ck4911.robot.Mode;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -39,6 +41,8 @@ public final class Drive extends SubsystemBase {
   private final double ks;
   private final double kv;
   private final SysIdRoutine sysId;
+  private final Command staticCharacterization;
+  private final Command feedForwardCharacterization;
 
   @Inject
   public Drive(
@@ -49,7 +53,8 @@ public final class Drive extends SubsystemBase {
       DriveConstants constants,
       DriveIOInputsAutoLogged driveInputs,
       DifferentialDriveOdometry odometry,
-      DifferentialDriveKinematics kinematics) {
+      DifferentialDriveKinematics kinematics,
+      StaticCharacterizationFactory staticCharacterizationFactory) {
     this.gyroIo = gyroIo;
     this.gyroInputs = gyroInputs;
     this.driveIo = driveIo;
@@ -63,6 +68,13 @@ public final class Drive extends SubsystemBase {
     ks = mode == Mode.SIM ? 0.0 : 0.0;
     kv = mode == Mode.SIM ? 0.227 : 0.0;
     feedforward = new SimpleMotorFeedforward(ks, kv);
+
+    staticCharacterization =
+        staticCharacterizationFactory
+            .create(this, this::driveVolts, this::getCharacterizationVelocity);
+
+    feedForwardCharacterization =
+        new FeedForwardCharacterization(this, this::driveVolts, this::getCharacterizationVelocity);
 
     // Configure SysId
     sysId =
@@ -86,6 +98,11 @@ public final class Drive extends SubsystemBase {
 
     // Update odometry
     odometry.update(gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters());
+  }
+
+  /** Run open loop at the specified voltage. */
+  public void driveVolts(double volts) {
+    driveIo.setVoltage(volts, volts);
   }
 
   /** Run open loop at the specified voltage. */
@@ -131,6 +148,14 @@ public final class Drive extends SubsystemBase {
   /** TODO: Update AdvantageKit or manually log @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
+  }
+
+  public Command staticCharacterization() {
+    return staticCharacterization;
+  }
+
+  public Command feedForwardCharacterization() {
+    return feedForwardCharacterization;
   }
 
   /** Resets the current odometry pose. */
