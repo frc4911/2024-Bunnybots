@@ -38,7 +38,7 @@ public interface DriveModule {
         .backRightId(2)
         .trackWidth(Units.inchesToMeters(21.9375))
         .wheelRadius(Units.inchesToMeters(3))
-        .gearRatio(50 / 14 * 45 / 19)
+        .gearRatio(50 / 14 * 45 / 19) // Gear ratio for KOP drivebase
         .build();
   }
 

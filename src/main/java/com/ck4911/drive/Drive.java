@@ -11,6 +11,8 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ck4911.commands.FeedForwardCharacterization;
 import com.ck4911.commands.StaticCharacterization.StaticCharacterizationFactory;
+import com.ck4911.util.LoggedTunableNumber;
+import com.ck4911.util.LoggedTunableNumber.TunableNumbers;
 import com.ck4911.robot.Mode;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -29,7 +31,8 @@ import org.littletonrobotics.junction.Logger;
 
 @Singleton
 public final class Drive extends SubsystemBase {
-
+  private final LoggedTunableNumber KP;
+  private final LoggedTunableNumber KD;
   private final GyroIO gyroIo;
   private final GyroIOInputsAutoLogged gyroInputs;
   private final DriveIO driveIo;
@@ -47,6 +50,7 @@ public final class Drive extends SubsystemBase {
   @Inject
   public Drive(
       Mode mode,
+      TunableNumbers tunableNumbers,
       GyroIO gyroIo,
       GyroIOInputsAutoLogged gyroInputs,
       DriveIO driveIo,
@@ -62,6 +66,9 @@ public final class Drive extends SubsystemBase {
     this.driveInputs = driveInputs;
     this.odometry = odometry;
     this.kinematics = kinematics;
+
+    KP = tunableNumbers.create("Drive/KP", 1.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
+    KD = tunableNumbers.create("Drive/KD", 0.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
 
     // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
     // Consider using SysId routines
@@ -98,6 +105,9 @@ public final class Drive extends SubsystemBase {
 
     // Update odometry
     odometry.update(gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters());
+
+    LoggedTunableNumber.ifChanged(
+        hashCode(), () -> driveIo.setPid(KP.get(), 0, KD.get()), KP, KD);
   }
 
   /** Run open loop at the specified voltage. */
