@@ -16,6 +16,7 @@ import dagger.Provides;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotGearing;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim.KitbotMotor;
@@ -35,6 +36,9 @@ public interface DriveModule {
         .frontRightId(1)
         .backLeftId(4)
         .backRightId(2)
+        .trackWidth(Units.inchesToMeters(21.9375))
+        .wheelRadius(Units.inchesToMeters(3))
+        .gearRatio(50 / 14 * 45 / 19)
         .build();
   }
 
