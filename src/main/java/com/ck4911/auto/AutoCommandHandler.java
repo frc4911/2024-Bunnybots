@@ -86,7 +86,9 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
+    addTests();
     addCharacterizations();
+    addSysIds();
   }
 
   private void addCharacterizations() {
@@ -105,7 +107,12 @@ public final class AutoCommandHandler implements VirtualSubsystem {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     chooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    chooser.addOption("FIRST AUTO", new PathPlannerAuto("New Auto"));
+  }
+
+  // left: 10.18 radians
+  // right: 10.27 radians
+  private void addTests() {
+    chooser.addOption("FIRST AUTO", drive.measureDistance(new PathPlannerAuto("New Auto")));
   }
 
   public void startCurrentCommand() {

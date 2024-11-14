@@ -20,8 +20,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -70,8 +72,8 @@ public final class Drive extends SubsystemBase {
     feedforward = new SimpleMotorFeedforward(ks, kv);
 
     staticCharacterization =
-        staticCharacterizationFactory
-            .create(this, this::driveVolts, this::getCharacterizationVelocity);
+        staticCharacterizationFactory.create(
+            this, this::driveVolts, this::getCharacterizationVelocity);
 
     feedForwardCharacterization =
         new FeedForwardCharacterization(this, this::driveVolts, this::getCharacterizationVelocity);
@@ -156,6 +158,25 @@ public final class Drive extends SubsystemBase {
 
   public Command feedForwardCharacterization() {
     return feedForwardCharacterization;
+  }
+
+  public Command measureDistance(Command command) {
+    AtomicReference<Double> leftStart = new AtomicReference<>();
+    AtomicReference<Double> rightStart = new AtomicReference<>();
+    return Commands.runOnce(
+            () -> {
+              leftStart.set(driveInputs.leftPositionRad);
+              rightStart.set(driveInputs.rightPositionRad);
+            })
+        .andThen(command)
+        .andThen(
+            Commands.runOnce(
+                () -> {
+                  double leftDistanceTraveled = driveInputs.leftPositionRad - leftStart.get();
+                  double rightDistanceTraveled = driveInputs.rightPositionRad - rightStart.get();
+                  double averageDistance = (rightDistanceTraveled + leftDistanceTraveled) / 2;
+                  System.out.println("Distance traveled = " + averageDistance + "! 💀");
+                }));
   }
 
   /** Resets the current odometry pose. */
