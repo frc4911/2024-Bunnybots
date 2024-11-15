@@ -69,7 +69,7 @@ public final class Drive extends SubsystemBase {
 
     KP =
         tunableNumbers.create(
-            "Drive/KP", 0.25); // TODO: MUST BE TUNED, consider using REV Hardware Client
+            "Drive/KP", 0.01); // TODO: MUST BE TUNED, consider using REV Hardware Client
     KD =
         tunableNumbers.create(
             "Drive/KD", 0.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
