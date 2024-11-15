@@ -16,7 +16,6 @@ import com.ck4911.util.Alerts;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -25,15 +24,15 @@ public final class ControllerBinding implements VirtualSubsystem {
   private final Alert driverDisconnected;
   private final Alert operatorDisconnected;
 
-  private final CommandXboxController driver;
-  private final CommandXboxController operator;
+  private final CyberKnightsController driver;
+  private final CyberKnightsController operator;
   private final Drive drive;
 
   @Inject
   public ControllerBinding(
       Drive drive,
-      @Controller(Role.DRIVER) CommandXboxController driver,
-      @Controller(Role.OPERATOR) CommandXboxController operator,
+      @Controller(Role.DRIVER) CyberKnightsController driver,
+      @Controller(Role.OPERATOR) CyberKnightsController operator,
       Alerts alerts) {
     this.drive = drive;
     this.driver = driver;
