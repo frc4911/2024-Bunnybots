@@ -36,11 +36,15 @@ public interface DriveModule {
         .frontRightId(1)
         .backLeftId(4)
         .backRightId(2)
-        .trackWidth(Units.inchesToMeters(21.9375))
+        .trackWidth(Units.inchesToMeters(20.75))
         .wheelRadius(Units.inchesToMeters(3))
-        .gearRatio(50 / 14 * 45 / 19) // Gear ratio for KOP drivebase
+        .gearRatio(50.0 / 14.0 * 45.0 / 19.0) // Gear ratio for KOP drivebase
         .build();
   }
+
+  // TODO: kS=0.16516
+  // TODO: kV=0.
+  // TODO: static characterization = 0.24 amps
 
   @Provides
   public static DriveIO providesDriveIO(
