@@ -16,9 +16,6 @@ import edu.wpi.first.math.util.Units;
 import javax.inject.Inject;
 
 public class DriveIOReal implements DriveIO {
-  private static final double GEAR_RATIO = 10.0;
-  private static final double KP = 1.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
-  private static final double KD = 0.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
 
   private final CANSparkFlex leftLeader;
   private final CANSparkFlex rightLeader;
@@ -28,9 +25,11 @@ public class DriveIOReal implements DriveIO {
   private final RelativeEncoder rightEncoder;
   private final SparkPIDController leftPID;
   private final SparkPIDController rightPID;
+  private final DriveConstants constants;
 
   @Inject
   public DriveIOReal(
+      DriveConstants constants,
       @Location(Corner.FRONT_LEFT) CANSparkFlex leftLeader,
       @Location(Corner.FRONT_RIGHT) CANSparkFlex rightLeader,
       @Location(Corner.BACK_LEFT) CANSparkFlex leftFollower,
@@ -39,6 +38,7 @@ public class DriveIOReal implements DriveIO {
     this.rightLeader = rightLeader;
     this.leftFollower = leftFollower;
     this.rightFollower = rightFollower;
+    this.constants = constants;
 
     leftEncoder = leftLeader.getEncoder();
     rightEncoder = rightLeader.getEncoder();
@@ -65,11 +65,6 @@ public class DriveIOReal implements DriveIO {
     leftLeader.setSmartCurrentLimit(60);
     rightLeader.setSmartCurrentLimit(60);
 
-    leftPID.setP(KP);
-    leftPID.setD(KD);
-    rightPID.setP(KP);
-    rightPID.setD(KD);
-
     leftLeader.burnFlash();
     rightLeader.burnFlash();
     leftFollower.burnFlash();
@@ -78,19 +73,27 @@ public class DriveIOReal implements DriveIO {
 
   @Override
   public void updateInputs(DriveIOInputs inputs) {
-    inputs.leftPositionRad = Units.rotationsToRadians(leftEncoder.getPosition() / GEAR_RATIO);
+    inputs.leftPositionRad = Units.rotationsToRadians(leftEncoder.getPosition() / constants.gearRatio());
     inputs.leftVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(leftEncoder.getVelocity() / GEAR_RATIO);
+        Units.rotationsPerMinuteToRadiansPerSecond(leftEncoder.getVelocity() / constants.gearRatio());
     inputs.leftAppliedVolts = leftLeader.getAppliedOutput() * leftLeader.getBusVoltage();
     inputs.leftCurrentAmps =
         new double[] {leftLeader.getOutputCurrent(), leftFollower.getOutputCurrent()};
 
-    inputs.rightPositionRad = Units.rotationsToRadians(rightEncoder.getPosition() / GEAR_RATIO);
+    inputs.rightPositionRad = Units.rotationsToRadians(rightEncoder.getPosition() / constants.gearRatio());
     inputs.rightVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(rightEncoder.getVelocity() / GEAR_RATIO);
+        Units.rotationsPerMinuteToRadiansPerSecond(rightEncoder.getVelocity() / constants.gearRatio());
     inputs.rightAppliedVolts = rightLeader.getAppliedOutput() * rightLeader.getBusVoltage();
     inputs.rightCurrentAmps =
         new double[] {rightLeader.getOutputCurrent(), rightFollower.getOutputCurrent()};
+  }
+
+  @Override
+  public void setPid(double kP, double kI, double kD) {
+    leftPID.setP(kP);
+    leftPID.setD(kD);
+    rightPID.setP(kP);
+    rightPID.setD(kD);
   }
 
   @Override
@@ -103,12 +106,12 @@ public class DriveIOReal implements DriveIO {
   public void setVelocity(
       double leftRadPerSec, double rightRadPerSec, double leftFFVolts, double rightFFVolts) {
     leftPID.setReference(
-        Units.radiansPerSecondToRotationsPerMinute(leftRadPerSec * GEAR_RATIO),
+        Units.radiansPerSecondToRotationsPerMinute(leftRadPerSec * constants.gearRatio()),
         ControlType.kVelocity,
         0,
         leftFFVolts);
     rightPID.setReference(
-        Units.radiansPerSecondToRotationsPerMinute(rightRadPerSec * GEAR_RATIO),
+        Units.radiansPerSecondToRotationsPerMinute(rightRadPerSec * constants.gearRatio()),
         ControlType.kVelocity,
         0,
         rightFFVolts);

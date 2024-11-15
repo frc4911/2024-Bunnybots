@@ -26,6 +26,8 @@ public interface DriveIO {
   /** Updates the set of loggable inputs. */
   public default void updateInputs(DriveIOInputs inputs) {}
 
+  public default void setPid(double kP, double kI, double kD) {}
+
   /** Run open loop at the specified voltage. */
   public default void setVoltage(double leftVolts, double rightVolts) {}
 

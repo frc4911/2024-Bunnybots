@@ -9,27 +9,42 @@ package com.ck4911.control;
 
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.Controller.Role;
+import com.ck4911.control.CyberKnightsController.Brand;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.IntoSet;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import javax.inject.Singleton;
 
 @Module
 public interface ControlModule {
+
+  @Provides
+  @Controller(Role.DRIVER)
+  public static Brand provideDriverControllerBrand() {
+    return Brand.STADIA;
+  }
+
+  @Provides
+  @Controller(Role.OPERATOR)
+  public static Brand provideOperatorControllerBrand() {
+    return Brand.STADIA;
+  }
+
   @Singleton
   @Provides
   @Controller(Role.DRIVER)
-  public static CommandXboxController provideDriverController() {
-    return new CommandXboxController(0);
+  public static CyberKnightsController provideDriverController(
+      @Controller(Role.DRIVER) Brand brand) {
+    return CyberKnightsController.createForBrand(0, brand);
   }
 
   @Singleton
   @Provides
   @Controller(Role.OPERATOR)
-  public static CommandXboxController provideOperatorController() {
-    return new CommandXboxController(1);
+  public static CyberKnightsController provideOperatorController(
+      @Controller(Role.OPERATOR) Brand brand) {
+    return CyberKnightsController.createForBrand(0, brand);
   }
 
   @Binds
