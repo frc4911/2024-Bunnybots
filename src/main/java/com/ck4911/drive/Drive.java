@@ -11,9 +11,9 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.ck4911.commands.FeedForwardCharacterization;
 import com.ck4911.commands.StaticCharacterization.StaticCharacterizationFactory;
+import com.ck4911.robot.Mode;
 import com.ck4911.util.LoggedTunableNumber;
 import com.ck4911.util.LoggedTunableNumber.TunableNumbers;
-import com.ck4911.robot.Mode;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -69,8 +69,12 @@ public final class Drive extends SubsystemBase {
     this.odometry = odometry;
     this.kinematics = kinematics;
 
-    KP = tunableNumbers.create("Drive/KP", 1.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
-    KD = tunableNumbers.create("Drive/KD", 0.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
+    KP =
+        tunableNumbers.create(
+            "Drive/KP", 0.0002); // TODO: MUST BE TUNED, consider using REV Hardware Client
+    KD =
+        tunableNumbers.create(
+            "Drive/KD", 0.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
 
     // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
     // Consider using SysId routines
@@ -107,9 +111,9 @@ public final class Drive extends SubsystemBase {
 
     // Update odometry
     odometry.update(gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters());
+    Logger.recordOutput("Odometry/Robot", getPose());
 
-    LoggedTunableNumber.ifChanged(
-        hashCode(), () -> driveIo.setPid(KP.get(), 0, KD.get()), KP, KD);
+    LoggedTunableNumber.ifChanged(hashCode(), () -> driveIo.setPid(KP.get(), 0, KD.get()), KP, KD);
   }
 
   /** Run open loop at the specified voltage. */
@@ -157,7 +161,6 @@ public final class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose in meters. */
-  /** TODO: Update AdvantageKit or manually log @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }

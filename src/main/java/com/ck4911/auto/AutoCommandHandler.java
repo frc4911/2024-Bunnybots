@@ -85,10 +85,16 @@ public final class AutoCommandHandler implements VirtualSubsystem {
 
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
-
     addTests();
     addCharacterizations();
     addSysIds();
+  }
+
+  private void addPath(String title, String fileName) {
+    chooser.addOption(
+        title,
+        Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile(fileName)))
+            .andThen(new PathPlannerAuto(fileName)));
   }
 
   private void addCharacterizations() {
@@ -112,7 +118,10 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   // left: 10.18 radians
   // right: 10.27 radians
   private void addTests() {
-    chooser.addOption("FIRST AUTO", drive.measureDistance(new PathPlannerAuto("New Auto")));
+    addPath("Forward", "ForwardTest");
+    addPath("Backward", "BackwardTest");
+    addPath("Curvey", "CurveyTest");
+    addPath("Loopy", "LoopyTest");
   }
 
   public void startCurrentCommand() {
