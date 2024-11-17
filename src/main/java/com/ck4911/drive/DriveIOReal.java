@@ -40,15 +40,15 @@ public class DriveIOReal implements DriveIO {
     this.rightFollower = rightFollower;
     this.constants = constants;
 
-    leftEncoder = leftLeader.getEncoder();
-    rightEncoder = rightLeader.getEncoder();
-    leftPID = leftLeader.getPIDController();
-    rightPID = rightLeader.getPIDController();
-
     leftLeader.restoreFactoryDefaults();
     rightLeader.restoreFactoryDefaults();
     leftFollower.restoreFactoryDefaults();
     rightFollower.restoreFactoryDefaults();
+
+    leftEncoder = leftLeader.getEncoder();
+    rightEncoder = rightLeader.getEncoder();
+    leftPID = leftLeader.getPIDController();
+    rightPID = rightLeader.getPIDController();
 
     leftLeader.setCANTimeout(250);
     rightLeader.setCANTimeout(250);
@@ -73,16 +73,20 @@ public class DriveIOReal implements DriveIO {
 
   @Override
   public void updateInputs(DriveIOInputs inputs) {
-    inputs.leftPositionRad = Units.rotationsToRadians(leftEncoder.getPosition() / constants.gearRatio());
+    inputs.leftPositionRad =
+        Units.rotationsToRadians(leftEncoder.getPosition() / constants.gearRatio());
     inputs.leftVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(leftEncoder.getVelocity() / constants.gearRatio());
+        Units.rotationsPerMinuteToRadiansPerSecond(
+            leftEncoder.getVelocity() / constants.gearRatio());
     inputs.leftAppliedVolts = leftLeader.getAppliedOutput() * leftLeader.getBusVoltage();
     inputs.leftCurrentAmps =
         new double[] {leftLeader.getOutputCurrent(), leftFollower.getOutputCurrent()};
 
-    inputs.rightPositionRad = Units.rotationsToRadians(rightEncoder.getPosition() / constants.gearRatio());
+    inputs.rightPositionRad =
+        Units.rotationsToRadians(rightEncoder.getPosition() / constants.gearRatio());
     inputs.rightVelocityRadPerSec =
-        Units.rotationsPerMinuteToRadiansPerSecond(rightEncoder.getVelocity() / constants.gearRatio());
+        Units.rotationsPerMinuteToRadiansPerSecond(
+            rightEncoder.getVelocity() / constants.gearRatio());
     inputs.rightAppliedVolts = rightLeader.getAppliedOutput() * rightLeader.getBusVoltage();
     inputs.rightCurrentAmps =
         new double[] {rightLeader.getOutputCurrent(), rightFollower.getOutputCurrent()};

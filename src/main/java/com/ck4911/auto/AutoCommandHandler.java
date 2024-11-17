@@ -86,7 +86,21 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
+    // Tests
+    addPath("Forward", "ForwardTest");
+    addPath("Backward", "BackwardTest");
+    addPath("Curvey", "CurveyTest");
+    addPath("Loopy", "LoopyTest");
+
     addCharacterizations();
+    addSysIds();
+  }
+
+  private void addPath(String title, String fileName) {
+    chooser.addOption(
+        title,
+        Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile(fileName)))
+            .andThen(new PathPlannerAuto(fileName)));
   }
 
   private void addCharacterizations() {
@@ -105,7 +119,6 @@ public final class AutoCommandHandler implements VirtualSubsystem {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     chooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    chooser.addOption("FIRST AUTO", new PathPlannerAuto("New Auto"));
   }
 
   public void startCurrentCommand() {

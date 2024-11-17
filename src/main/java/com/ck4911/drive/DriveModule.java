@@ -31,25 +31,28 @@ public interface DriveModule {
   @Singleton
   public static DriveConstants provideDriveConstants() {
     return DriveConstantsBuilder.builder()
-        .gyroId(1)
+        .gyroId(0)
         .frontLeftId(3)
         .frontRightId(1)
         .backLeftId(4)
         .backRightId(2)
-        .trackWidth(Units.inchesToMeters(21.9375))
+        .trackWidth(Units.inchesToMeters(20.75))
         .wheelRadius(Units.inchesToMeters(3))
-        .gearRatio(50 / 14 * 45 / 19) // Gear ratio for KOP drivebase
+        .gearRatio(50.0 / 14.0 * 45.0 / 19.0) // Gear ratio for KOP drivebase
         .build();
   }
+
+  // TODO: R2=0.99864
+  // TODO: kS=0.15861
+  // TODO: kV=0.13880
+  // TODO: static characterization = 0.24 amps
 
   @Provides
   public static DriveIO providesDriveIO(
       Mode mode, Provider<DriveIOReal> realProvider, Provider<DriveIOSim> simProvider) {
     switch (mode) {
       case REAL:
-        // TODO: enable this when motors are set up
         return realProvider.get();
-        // return new DriveIO() {};
       case SIM:
         return simProvider.get();
       default:
@@ -78,9 +81,7 @@ public interface DriveModule {
       Mode mode, Provider<GyroIOReal> realProvider, Provider<GyrIOSim> simProvider) {
     switch (mode) {
       case REAL:
-        // TODO: when the pigeon is installed, enable this next line.
-        // return realProvider.get();
-        return new GyroIO() {};
+        return realProvider.get();
       case SIM:
         return simProvider.get();
       default:
