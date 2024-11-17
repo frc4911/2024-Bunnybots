@@ -173,22 +173,25 @@ public final class Drive extends SubsystemBase {
     return feedForwardCharacterization;
   }
 
+  /** Runs a command recording the distance the robot traveled during the command. */
   public Command measureDistance(Command command) {
-    AtomicReference<Double> leftStart = new AtomicReference<>();
-    AtomicReference<Double> rightStart = new AtomicReference<>();
+    AtomicReference<Double> leftRadiansStart = new AtomicReference<>();
+    AtomicReference<Double> rightRadiansStart = new AtomicReference<>();
     return Commands.runOnce(
             () -> {
-              leftStart.set(driveInputs.leftPositionRad);
-              rightStart.set(driveInputs.rightPositionRad);
+              leftRadiansStart.set(driveInputs.leftPositionRad);
+              rightRadiansStart.set(driveInputs.rightPositionRad);
             })
         .andThen(command)
         .andThen(
             Commands.runOnce(
                 () -> {
-                  double leftDistanceTraveled = driveInputs.leftPositionRad - leftStart.get();
-                  double rightDistanceTraveled = driveInputs.rightPositionRad - rightStart.get();
-                  double averageDistance = (rightDistanceTraveled + leftDistanceTraveled) / 2;
-                  System.out.println("Distance traveled = " + averageDistance + "! 💀");
+                  double leftRadiansTraveled = driveInputs.leftPositionRad - leftRadiansStart.get();
+                  double rightRadiansTraveled =
+                      driveInputs.rightPositionRad - rightRadiansStart.get();
+                  double averageDistance =
+                      constants.wheelRadius() * (rightRadiansTraveled + leftRadiansTraveled) / 2;
+                  System.out.println("Distance traveled: " + averageDistance + "meters 💀");
                 }));
   }
 

@@ -91,8 +91,6 @@ public final class AutoCommandHandler implements VirtualSubsystem {
     addSysIds();
   }
 
-  // left: 10.18 radians
-  // right: 10.27 radians
   private void addTests() {
     chooser.addOption(
         "Forward",
