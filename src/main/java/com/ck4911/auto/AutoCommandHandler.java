@@ -86,8 +86,21 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
-    chooser.addOption("FIRST AUTO", new PathPlannerAuto("New Auto"));
+    // Tests
+    addPath("Forward", "ForwardTest");
+    addPath("Backward", "BackwardTest");
+    addPath("Curvey", "CurveyTest");
+    addPath("Loopy", "LoopyTest");
+
     addCharacterizations();
+    addSysIds();
+  }
+
+  private void addPath(String title, String fileName) {
+    chooser.addOption(
+        title,
+        Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile(fileName)))
+            .andThen(new PathPlannerAuto(fileName)));
   }
 
   private void addCharacterizations() {

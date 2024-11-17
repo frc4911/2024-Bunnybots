@@ -69,7 +69,7 @@ public final class Drive extends SubsystemBase {
 
     KP =
         tunableNumbers.create(
-            "Drive/KP", 0.01); // TODO: MUST BE TUNED, consider using REV Hardware Client
+            "Drive/KP", 0.0002); // TODO: MUST BE TUNED, consider using REV Hardware Client
     KD =
         tunableNumbers.create(
             "Drive/KD", 0.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
@@ -109,6 +109,7 @@ public final class Drive extends SubsystemBase {
 
     // Update odometry
     odometry.update(gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters());
+    Logger.recordOutput("Odometry/Robot", getPose());
 
     LoggedTunableNumber.ifChanged(hashCode(), () -> driveIo.setPid(KP.get(), 0, KD.get()), KP, KD);
   }
@@ -158,7 +159,6 @@ public final class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose in meters. */
-  /** TODO: Update AdvantageKit or manually log @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }

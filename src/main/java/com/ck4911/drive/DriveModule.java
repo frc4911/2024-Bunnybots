@@ -31,7 +31,7 @@ public interface DriveModule {
   @Singleton
   public static DriveConstants provideDriveConstants() {
     return DriveConstantsBuilder.builder()
-        .gyroId(1)
+        .gyroId(0)
         .frontLeftId(3)
         .frontRightId(1)
         .backLeftId(4)
@@ -42,8 +42,9 @@ public interface DriveModule {
         .build();
   }
 
-  // TODO: kS=0.16516
-  // TODO: kV=0.
+  // TODO: R2=0.99864
+  // TODO: kS=0.15861
+  // TODO: kV=0.13880
   // TODO: static characterization = 0.24 amps
 
   @Provides
@@ -51,9 +52,7 @@ public interface DriveModule {
       Mode mode, Provider<DriveIOReal> realProvider, Provider<DriveIOSim> simProvider) {
     switch (mode) {
       case REAL:
-        // TODO: enable this when motors are set up
         return realProvider.get();
-        // return new DriveIO() {};
       case SIM:
         return simProvider.get();
       default:
@@ -82,9 +81,7 @@ public interface DriveModule {
       Mode mode, Provider<GyroIOReal> realProvider, Provider<GyrIOSim> simProvider) {
     switch (mode) {
       case REAL:
-        // TODO: when the pigeon is installed, enable this next line.
-        // return realProvider.get();
-        return new GyroIO() {};
+        return realProvider.get();
       case SIM:
         return simProvider.get();
       default:
