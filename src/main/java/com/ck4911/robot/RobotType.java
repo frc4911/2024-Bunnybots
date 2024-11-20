@@ -5,9 +5,10 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.grabber;
+package com.ck4911.robot;
 
-import io.soabase.recordbuilder.core.RecordBuilder;
-
-@RecordBuilder
-public record GrabberConstants(int armMotorId) {}
+public enum RobotType {
+  SIMBOT,
+  DEVBOT,
+  COMPBOT
+}

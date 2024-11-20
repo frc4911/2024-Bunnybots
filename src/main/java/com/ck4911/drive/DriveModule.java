@@ -7,15 +7,36 @@
 
 package com.ck4911.drive;
 
-import com.ck4911.Constants.Mode;
+import com.ck4911.drive.Location.Corner;
+import com.ck4911.robot.Mode;
+import com.ctre.phoenix6.hardware.Pigeon2;
+import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 import dagger.Module;
 import dagger.Provides;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 
 @Module
 public interface DriveModule {
 
   @Provides
+  @Singleton
+  public static DriveConstants provideDriveConstants() {
+    return DriveConstantsBuilder.builder()
+        .gyroId(1)
+        .frontLeftId(3)
+        .frontRightId(1)
+        .backLeftId(4)
+        .backRightId(2)
+        .build();
+  }
+
+  @Provides
+  @Singleton
   public static DriveIO providesDriveIO(
       Mode mode, Provider<DriveIOReal> realProvider, Provider<DriveIOSim> simProvider) {
     switch (mode) {
@@ -28,5 +49,57 @@ public interface DriveModule {
       default:
         return new DriveIO() {};
     }
+  }
+
+  @Provides
+  @Singleton
+  public static DriveIOInputsAutoLogged provideDriveIOInputsAutoLogged() {
+    return new DriveIOInputsAutoLogged();
+  }
+
+  @Provides
+  public static DifferentialDriveOdometry provideDifferentialDriveOdometry() {
+    return new DifferentialDriveOdometry(new Rotation2d(), 0.0, 0.0);
+  }
+
+  @Provides
+  @Singleton
+  public static DifferentialDriveKinematics provideDifferentialDriveKinematics(
+      DriveConstants constants) {
+    return new DifferentialDriveKinematics(constants.trackWidth());
+  }
+
+  @Provides
+  @Singleton
+  public static Pigeon2 providePigeon2(DriveConstants constants) {
+    return new Pigeon2(constants.gyroId());
+  }
+
+  @Provides
+  @Location(Corner.FRONT_LEFT)
+  @Singleton
+  public static CANSparkFlex provideFrontLeftMotor(DriveConstants constants) {
+    return new CANSparkFlex(constants.frontLeftId(), MotorType.kBrushless);
+  }
+
+  @Provides
+  @Location(Corner.FRONT_RIGHT)
+  @Singleton
+  public static CANSparkFlex provideFrontRightMotor(DriveConstants constants) {
+    return new CANSparkFlex(constants.frontRightId(), MotorType.kBrushless);
+  }
+
+  @Provides
+  @Location(Corner.BACK_LEFT)
+  @Singleton
+  public static CANSparkFlex provideBackLeftMotor(DriveConstants constants) {
+    return new CANSparkFlex(constants.backLeftId(), MotorType.kBrushless);
+  }
+
+  @Provides
+  @Location(Corner.BACK_RIGHT)
+  @Singleton
+  public static CANSparkFlex provideBackRightMotor(DriveConstants constants) {
+    return new CANSparkFlex(constants.backRightId(), MotorType.kBrushless);
   }
 }

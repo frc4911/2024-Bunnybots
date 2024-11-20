@@ -7,12 +7,15 @@
 
 package com.ck4911.drive;
 
-public final class DriveConstants {
+import io.soabase.recordbuilder.core.RecordBuilder;
 
-  private DriveConstants() {}
-
-  public static int frontRight = 1;
-  public static int backRight = 2;
-  public static int frontLeft = 3;
-  public static int backLeft = 4;
-}
+@RecordBuilder
+public record DriveConstants(
+    int frontRightId,
+    int backRightId,
+    int frontLeftId,
+    int backLeftId,
+    int gyroId,
+    double gearRatio,
+    double wheelRadius,
+    double trackWidth) {}

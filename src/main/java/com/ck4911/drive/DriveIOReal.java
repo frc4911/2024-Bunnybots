@@ -7,12 +7,12 @@
 
 package com.ck4911.drive;
 
+import com.ck4911.drive.Location.Corner;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,20 +24,38 @@ public class DriveIOReal implements DriveIO {
   private static final double KP = 1.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
   private static final double KD = 0.0; // TODO: MUST BE TUNED, consider using REV Hardware Client
 
-  private final CANSparkFlex leftLeader = new CANSparkFlex(1, MotorType.kBrushless);
-  private final CANSparkFlex rightLeader = new CANSparkFlex(2, MotorType.kBrushless);
-  private final CANSparkFlex leftFollower = new CANSparkFlex(3, MotorType.kBrushless);
-  private final CANSparkFlex rightFollower = new CANSparkFlex(4, MotorType.kBrushless);
-  private final RelativeEncoder leftEncoder = leftLeader.getEncoder();
-  private final RelativeEncoder rightEncoder = rightLeader.getEncoder();
-  private final SparkPIDController leftPID = leftLeader.getPIDController();
-  private final SparkPIDController rightPID = rightLeader.getPIDController();
+  private final CANSparkFlex leftLeader;
+  private final CANSparkFlex rightLeader;
+  private final CANSparkFlex leftFollower;
+  private final CANSparkFlex rightFollower;
+  private final RelativeEncoder leftEncoder;
+  private final RelativeEncoder rightEncoder;
+  private final SparkPIDController leftPID;
+  private final SparkPIDController rightPID;
 
-  private final Pigeon2 pigeon = new Pigeon2(20);
-  private final StatusSignal<Double> yaw = pigeon.getYaw();
+  private final Pigeon2 pigeon;
+  private final StatusSignal<Double> yaw;
 
   @Inject
-  public DriveIOReal() {
+  public DriveIOReal(
+      Pigeon2 pigeon,
+      @Location(Corner.FRONT_LEFT) CANSparkFlex leftLeader,
+      @Location(Corner.FRONT_RIGHT) CANSparkFlex rightLeader,
+      @Location(Corner.BACK_LEFT) CANSparkFlex leftFollower,
+      @Location(Corner.BACK_RIGHT) CANSparkFlex rightFollower) {
+    this.pigeon = pigeon;
+    this.leftLeader = leftLeader;
+    this.rightLeader = rightLeader;
+    this.leftFollower = leftFollower;
+    this.rightFollower = rightFollower;
+
+    yaw = pigeon.getYaw();
+
+    leftEncoder = leftLeader.getEncoder();
+    rightEncoder = rightLeader.getEncoder();
+    leftPID = leftLeader.getPIDController();
+    rightPID = rightLeader.getPIDController();
+
     leftLeader.restoreFactoryDefaults();
     rightLeader.restoreFactoryDefaults();
     leftFollower.restoreFactoryDefaults();

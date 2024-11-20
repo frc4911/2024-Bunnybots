@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.collector;
+package com.ck4911.toyota;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
@@ -13,20 +13,20 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import javax.inject.Inject;
 
-public final class CollectorIOSim implements CollectorIO {
+public final class ToyotaIOSim implements ToyotaIO {
   // TODO: modify this
   private SingleJointedArmSim armSim =
       new SingleJointedArmSim(DCMotor.getNEO(1), 50, 0.5, 0.5, 0.0, Math.PI / 2.0, true, 0.0);
   private double armAppliedVolts = 0.0;
 
   @Inject
-  public CollectorIOSim() {
-    System.out.println("[Init] Creating CollectorIOSim");
+  public ToyotaIOSim() {
+    System.out.println("[Init] Creating ToyotaIOSim");
     armSim.setState(VecBuilder.fill(Math.PI / 2.0, 0.0));
   }
 
   @Override
-  public void updateInputs(CollectorIOInputs inputs) {
+  public void updateInputs(ToyotaIOInputs inputs) {
     // TODO: update the sim at the configured period
     // armSim.update(Constants.loopPeriodSecs);
 

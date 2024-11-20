@@ -7,7 +7,6 @@
 
 package com.ck4911.robot;
 
-import com.ck4911.Constants.Mode;
 import dagger.Module;
 import dagger.Provides;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;

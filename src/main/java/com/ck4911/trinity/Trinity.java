@@ -9,7 +9,9 @@ package com.ck4911.trinity;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public final class Trinity extends SubsystemBase {
 
   private final TrinityIO io;

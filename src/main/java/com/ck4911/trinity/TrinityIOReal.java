@@ -12,7 +12,7 @@ import javax.inject.Inject;
 public final class TrinityIOReal implements TrinityIO {
 
   @Inject
-  public TrinityIOReal() {
+  public TrinityIOReal(TrinityConstants trinityConstants) {
     // TODO: set up motors and encoders here
   }
 
@@ -22,7 +22,10 @@ public final class TrinityIOReal implements TrinityIO {
   }
 
   @Override
-  public void setArmVoltage(double volts) {
+  public void runSetpoint(double setpointRads, double feedforward) {}
+
+  @Override
+  public void runVolts(double volts) {
     // TODO: pass this on to the motor
   }
 

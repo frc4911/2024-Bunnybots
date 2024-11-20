@@ -5,17 +5,19 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package com.ck4911.collector;
+package com.ck4911.toyota;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public final class Collector extends SubsystemBase {
+@Singleton
+public final class Toyota extends SubsystemBase {
 
-  private final CollectorIO io;
+  private final ToyotaIO io;
 
   @Inject
-  public Collector(CollectorIO io) {
+  public Toyota(ToyotaIO io) {
     this.io = io;
   }
 }
