@@ -22,8 +22,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -169,6 +171,42 @@ public final class Drive extends SubsystemBase {
 
   public Command feedForwardCharacterization() {
     return feedForwardCharacterization;
+  }
+
+  /** Runs a command recording the distance the robot traveled during the command. */
+  public Command measureDistance(Command command) {
+    AtomicReference<Double> leftRadiansStart = new AtomicReference<>();
+    AtomicReference<Double> rightRadiansStart = new AtomicReference<>();
+    return Commands.runOnce(
+            () -> {
+              leftRadiansStart.set(driveInputs.leftPositionRad);
+              rightRadiansStart.set(driveInputs.rightPositionRad);
+            })
+        .andThen(command)
+        .andThen(
+            Commands.runOnce(
+                () -> {
+                  double leftRadiansTraveled = driveInputs.leftPositionRad - leftRadiansStart.get();
+                  double rightRadiansTraveled =
+                      driveInputs.rightPositionRad - rightRadiansStart.get();
+                  double averageDistance =
+                      constants.wheelRadius() * (rightRadiansTraveled + leftRadiansTraveled) / 2;
+                  System.out.println(
+                      "                  left meters: "
+                          + (constants.wheelRadius() * leftRadiansTraveled)
+                          + "meters");
+                  System.out.println(
+                      "                  right meters: "
+                          + (constants.wheelRadius() * rightRadiansTraveled)
+                          + "meters");
+                  System.out.println(
+                      "                  left radians: " + leftRadiansTraveled + "radians");
+                  System.out.println(
+                      "                 right radians: " + rightRadiansTraveled + "radians");
+                  System.out.println("               average: " + averageDistance + "meters []:");
+                  System.out.println(
+                      "               average: " + (averageDistance * 39.37) + "inches []:");
+                }));
   }
 
   /** Resets the current odometry pose. */

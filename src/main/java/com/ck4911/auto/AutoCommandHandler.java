@@ -86,21 +86,26 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
-    // Tests
-    addPath("Forward", "ForwardTest");
-    addPath("Backward", "BackwardTest");
-    addPath("Curvey", "CurveyTest");
-    addPath("Loopy", "LoopyTest");
-
+    addTests();
     addCharacterizations();
     addSysIds();
   }
 
-  private void addPath(String title, String fileName) {
+  private void addTests() {
     chooser.addOption(
-        title,
-        Commands.runOnce(() -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile(fileName)))
-            .andThen(new PathPlannerAuto(fileName)));
+        "Forward",
+        drive.measureDistance(
+            setStartPoseToStartOfPath("ForwardTest").andThen(new PathPlannerAuto("ForwardTest"))));
+    chooser.addOption(
+        "Backward",
+        drive.measureDistance(
+            setStartPoseToStartOfPath("BackwardTest")
+                .andThen(new PathPlannerAuto("BackwardTest"))));
+    chooser.addOption(
+        "Curvey",
+        setStartPoseToStartOfPath("CurveyTest").andThen(new PathPlannerAuto("CurveyTest")));
+    chooser.addOption(
+        "Loopy", setStartPoseToStartOfPath("LoopyTest").andThen(new PathPlannerAuto("LoopyTest")));
   }
 
   private void addCharacterizations() {
@@ -119,6 +124,11 @@ public final class AutoCommandHandler implements VirtualSubsystem {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     chooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+  }
+
+  private Command setStartPoseToStartOfPath(String fileName) {
+    return Commands.runOnce(
+        () -> drive.setPose(PathPlannerAuto.getStaringPoseFromAutoFile(fileName)));
   }
 
   public void startCurrentCommand() {
