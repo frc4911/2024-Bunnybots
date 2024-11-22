@@ -191,7 +191,21 @@ public final class Drive extends SubsystemBase {
                       driveInputs.rightPositionRad - rightRadiansStart.get();
                   double averageDistance =
                       constants.wheelRadius() * (rightRadiansTraveled + leftRadiansTraveled) / 2;
-                  System.out.println("Distance traveled: " + averageDistance + "meters 💀");
+                  System.out.println(
+                      "                  left meters: "
+                          + (constants.wheelRadius() * leftRadiansTraveled)
+                          + "meters");
+                  System.out.println(
+                      "                  right meters: "
+                          + (constants.wheelRadius() * rightRadiansTraveled)
+                          + "meters");
+                  System.out.println(
+                      "                  left radians: " + leftRadiansTraveled + "radians");
+                  System.out.println(
+                      "                 right radians: " + rightRadiansTraveled + "radians");
+                  System.out.println("               average: " + averageDistance + "meters []:");
+                  System.out.println(
+                      "               average: " + (averageDistance * 39.37) + "inches []:");
                 }));
   }
 
