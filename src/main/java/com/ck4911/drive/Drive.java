@@ -9,7 +9,11 @@ package com.ck4911.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import com.ck4911.commands.FeedForwardCharacterization;
+import com.ck4911.commands.StaticCharacterization.StaticCharacterizationFactory;
 import com.ck4911.robot.Mode;
+import com.ck4911.util.LoggedTunableNumber;
+import com.ck4911.util.LoggedTunableNumber.TunableNumbers;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -18,8 +22,10 @@ import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -27,36 +33,61 @@ import org.littletonrobotics.junction.Logger;
 
 @Singleton
 public final class Drive extends SubsystemBase {
-
-  private final DriveIO io;
+  private final LoggedTunableNumber KP;
+  private final LoggedTunableNumber KD;
+  private final GyroIO gyroIo;
+  private final GyroIOInputsAutoLogged gyroInputs;
+  private final DriveIO driveIo;
   private final DriveConstants constants;
-  private final DriveIOInputsAutoLogged inputs;
+  private final DriveIOInputsAutoLogged driveInputs;
   private final DifferentialDriveOdometry odometry;
   private final DifferentialDriveKinematics kinematics;
   private final SimpleMotorFeedforward feedforward;
   private final double ks;
   private final double kv;
   private final SysIdRoutine sysId;
+  private final Command staticCharacterization;
+  private final Command feedForwardCharacterization;
 
   @Inject
   public Drive(
       Mode mode,
-      DriveIO io,
+      TunableNumbers tunableNumbers,
+      GyroIO gyroIo,
+      GyroIOInputsAutoLogged gyroInputs,
+      DriveIO driveIo,
       DriveConstants constants,
-      DriveIOInputsAutoLogged inputs,
+      DriveIOInputsAutoLogged driveInputs,
       DifferentialDriveOdometry odometry,
-      DifferentialDriveKinematics kinematics) {
-    this.io = io;
+      DifferentialDriveKinematics kinematics,
+      StaticCharacterizationFactory staticCharacterizationFactory) {
+    this.gyroIo = gyroIo;
+    this.gyroInputs = gyroInputs;
+    this.driveIo = driveIo;
     this.constants = constants;
-    this.inputs = inputs;
+    this.driveInputs = driveInputs;
     this.odometry = odometry;
     this.kinematics = kinematics;
+
+    KP =
+        tunableNumbers.create(
+            "Drive/KP", 0.0002); // TODO: MUST BE TUNED, consider using REV Hardware Client
+    KD =
+        tunableNumbers.create(
+            "Drive/KD", 0.0); // TODO: MUST BE TUNED, consider using REV Hardware Client
 
     // TODO: NON-SIM FEEDFORWARD GAINS MUST BE TUNED
     // Consider using SysId routines
     ks = mode == Mode.SIM ? 0.0 : 0.0;
     kv = mode == Mode.SIM ? 0.227 : 0.0;
     feedforward = new SimpleMotorFeedforward(ks, kv);
+
+    staticCharacterization =
+        staticCharacterizationFactory.create(
+            this, this::driveVolts, this::getCharacterizationVelocity);
+
+    feedForwardCharacterization =
+        new FeedForwardCharacterization(this, this::driveVolts, this::getCharacterizationVelocity);
 
     // Configure SysId
     sysId =
@@ -72,16 +103,27 @@ public final class Drive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    io.updateInputs(inputs);
-    Logger.processInputs("Drive", inputs);
+    driveIo.updateInputs(driveInputs);
+    gyroIo.updateInputs(gyroInputs);
+
+    Logger.processInputs("Drive", driveInputs);
+    Logger.processInputs("Gyro", gyroInputs);
 
     // Update odometry
-    odometry.update(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters());
+    odometry.update(gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters());
+    Logger.recordOutput("Odometry/Robot", getPose());
+
+    LoggedTunableNumber.ifChanged(hashCode(), () -> driveIo.setPid(KP.get(), 0, KD.get()), KP, KD);
+  }
+
+  /** Run open loop at the specified voltage. */
+  public void driveVolts(double volts) {
+    driveIo.setVoltage(volts, volts);
   }
 
   /** Run open loop at the specified voltage. */
   public void driveVolts(double leftVolts, double rightVolts) {
-    io.setVoltage(leftVolts, rightVolts);
+    driveIo.setVoltage(leftVolts, rightVolts);
   }
 
   /** Run closed loop at the specified voltage. */
@@ -90,7 +132,7 @@ public final class Drive extends SubsystemBase {
     Logger.recordOutput("Drive/RightVelocitySetpointMetersPerSec", rightMetersPerSec);
     double leftRadPerSec = leftMetersPerSec / constants.wheelRadius();
     double rightRadPerSec = rightMetersPerSec / constants.wheelRadius();
-    io.setVelocity(
+    driveIo.setVelocity(
         leftRadPerSec,
         rightRadPerSec,
         feedforward.calculate(leftRadPerSec),
@@ -100,12 +142,12 @@ public final class Drive extends SubsystemBase {
   /** Run open loop based on stick positions. */
   public void driveArcade(double xSpeed, double zRotation) {
     var speeds = DifferentialDrive.arcadeDriveIK(xSpeed, zRotation, true);
-    io.setVoltage(speeds.left * 12.0, speeds.right * 12.0);
+    driveIo.setVoltage(speeds.left * 12.0, speeds.right * 12.0);
   }
 
   /** Stops the drive. */
   public void stop() {
-    io.setVoltage(0.0, 0.0);
+    driveIo.setVoltage(0.0, 0.0);
   }
 
   /** Returns a command to run a quasistatic test in the specified direction. */
@@ -119,14 +161,58 @@ public final class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry pose in meters. */
-  /** TODO: Update AdvantageKit or manually log @AutoLogOutput(key = "Odometry/Robot") */
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
+  public Command staticCharacterization() {
+    return staticCharacterization;
+  }
+
+  public Command feedForwardCharacterization() {
+    return feedForwardCharacterization;
+  }
+
+  /** Runs a command recording the distance the robot traveled during the command. */
+  public Command measureDistance(Command command) {
+    AtomicReference<Double> leftRadiansStart = new AtomicReference<>();
+    AtomicReference<Double> rightRadiansStart = new AtomicReference<>();
+    return Commands.runOnce(
+            () -> {
+              leftRadiansStart.set(driveInputs.leftPositionRad);
+              rightRadiansStart.set(driveInputs.rightPositionRad);
+            })
+        .andThen(command)
+        .andThen(
+            Commands.runOnce(
+                () -> {
+                  double leftRadiansTraveled = driveInputs.leftPositionRad - leftRadiansStart.get();
+                  double rightRadiansTraveled =
+                      driveInputs.rightPositionRad - rightRadiansStart.get();
+                  double averageDistance =
+                      constants.wheelRadius() * (rightRadiansTraveled + leftRadiansTraveled) / 2;
+                  System.out.println(
+                      "                  left meters: "
+                          + (constants.wheelRadius() * leftRadiansTraveled)
+                          + "meters");
+                  System.out.println(
+                      "                  right meters: "
+                          + (constants.wheelRadius() * rightRadiansTraveled)
+                          + "meters");
+                  System.out.println(
+                      "                  left radians: " + leftRadiansTraveled + "radians");
+                  System.out.println(
+                      "                 right radians: " + rightRadiansTraveled + "radians");
+                  System.out.println("               average: " + averageDistance + "meters []:");
+                  System.out.println(
+                      "               average: " + (averageDistance * 39.37) + "inches []:");
+                }));
+  }
+
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
-    odometry.resetPosition(inputs.gyroYaw, getLeftPositionMeters(), getRightPositionMeters(), pose);
+    odometry.resetPosition(
+        gyroInputs.yawPosition, getLeftPositionMeters(), getRightPositionMeters(), pose);
   }
 
   public ChassisSpeeds getSpeeds() {
@@ -143,29 +229,29 @@ public final class Drive extends SubsystemBase {
   /** Returns the position of the left wheels in meters. */
   @AutoLogOutput
   public double getLeftPositionMeters() {
-    return inputs.leftPositionRad * constants.wheelRadius();
+    return driveInputs.leftPositionRad * constants.wheelRadius();
   }
 
   /** Returns the position of the right wheels in meters. */
   @AutoLogOutput
   public double getRightPositionMeters() {
-    return inputs.rightPositionRad * constants.wheelRadius();
+    return driveInputs.rightPositionRad * constants.wheelRadius();
   }
 
   /** Returns the velocity of the left wheels in meters/second. */
   @AutoLogOutput
   public double getLeftVelocityMetersPerSec() {
-    return inputs.leftVelocityRadPerSec * constants.wheelRadius();
+    return driveInputs.leftVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the velocity of the right wheels in meters/second. */
   @AutoLogOutput
   public double getRightVelocityMetersPerSec() {
-    return inputs.rightVelocityRadPerSec * constants.wheelRadius();
+    return driveInputs.rightVelocityRadPerSec * constants.wheelRadius();
   }
 
   /** Returns the average velocity in radians/second. */
   public double getCharacterizationVelocity() {
-    return (inputs.leftVelocityRadPerSec + inputs.rightVelocityRadPerSec) / 2.0;
+    return (driveInputs.leftVelocityRadPerSec + driveInputs.rightVelocityRadPerSec) / 2.0;
   }
 }
