@@ -17,7 +17,7 @@ public interface ToyotaModule {
 
   @Provides
   public static ToyotaConstants provideToyotaConstants() {
-    return ToyotaConstantsBuilder.builder().armMotorId(41).rollerMotorId(42).build();
+    return ToyotaConstantsBuilder.builder().rollerMotorId(41).build();
   }
 
   @Provides

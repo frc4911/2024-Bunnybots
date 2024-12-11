@@ -20,4 +20,8 @@ public final class Toyota extends SubsystemBase {
   public Toyota(ToyotaIO io) {
     this.io = io;
   }
+
+  public void setMotorOutputPercent(double outputPercent) {
+    io.setMotorOutputPercent(outputPercent);
+  }
 }

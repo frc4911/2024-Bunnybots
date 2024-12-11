@@ -37,4 +37,6 @@ public interface ToyotaIO {
 
   /** Enable or disable brake mode on the motors. */
   public default void setBrakeMode(boolean armBrake, boolean rollerBrake) {}
+
+  public default void setMotorOutputPercent(double outputPercent) {}
 }
