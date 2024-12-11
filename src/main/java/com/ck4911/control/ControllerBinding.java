@@ -16,7 +16,6 @@ import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -65,17 +64,15 @@ public final class ControllerBinding implements VirtualSubsystem {
     drive.setDefaultCommand(
         Commands.run(() -> drive.driveArcade(-driver.getLeftY(), -driver.getRightX()), drive));
 
-    driver.rightTrigger().onTrue(
-      Commands.run(() -> trinity.setMotorOutputPercent(.1))
-    ).onFalse(
-      Commands.run(() -> trinity.setMotorOutputPercent(0))
-    );
+    driver
+        .rightTrigger()
+        .onTrue(Commands.run(() -> trinity.setMotorOutputPercent(.1)))
+        .onFalse(Commands.run(() -> trinity.setMotorOutputPercent(0)));
 
-    driver.leftTrigger().onTrue(
-      Commands.run(() -> trinity.setMotorOutputPercent(-.1))
-    ).onFalse(
-      Commands.run(() -> trinity.setMotorOutputPercent(0))
-    );
+    driver
+        .leftTrigger()
+        .onTrue(Commands.run(() -> trinity.setMotorOutputPercent(-.1)))
+        .onFalse(Commands.run(() -> trinity.setMotorOutputPercent(0)));
   }
 
   public void setDriverRumble(boolean enabled) {

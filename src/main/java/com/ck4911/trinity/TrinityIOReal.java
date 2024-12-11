@@ -7,14 +7,10 @@
 
 package com.ck4911.trinity;
 
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
-import com.revrobotics.RelativeEncoder;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-
+import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.util.Units;
-
 import javax.inject.Inject;
 
 public final class TrinityIOReal implements TrinityIO {
@@ -31,8 +27,8 @@ public final class TrinityIOReal implements TrinityIO {
   @Override
   public void updateInputs(TrinityIOInputs inputs) {
     BaseStatusSignal.refreshAll(velocity);
-    inputs.velocityRadsPerSec = 
-      Units.rotationsPerMinuteToRadiansPerSecond(velocity.getValueAsDouble());
+    inputs.velocityRadsPerSec =
+        Units.rotationsPerMinuteToRadiansPerSecond(velocity.getValueAsDouble());
   }
 
   @Override

@@ -7,8 +7,6 @@
 
 package com.ck4911.trinity;
 
-import com.ck4911.grabber.GrabberConstants;
-import com.ck4911.grabber.GrabberConstantsBuilder;
 import com.ck4911.robot.Mode;
 import dagger.Module;
 import dagger.Provides;
@@ -18,8 +16,8 @@ import javax.inject.Provider;
 public interface TrinityModule {
 
   @Provides
-  public static GrabberConstants provideGrabberConstants() {
-    return GrabberConstantsBuilder.builder().armMotorId(31).build();
+  public static TrinityConstants provideTrinityConstants() {
+    return TrinityConstantsBuilder.builder().rollerMotorId(31).build();
   }
 
   @Provides
