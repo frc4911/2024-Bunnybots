@@ -7,19 +7,32 @@
 
 package com.ck4911.grabber;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.math.util.Units;
 import javax.inject.Inject;
 
 public final class GrabberIOReal implements GrabberIO {
-  private final TalonFX arm;
+  private final TalonFX grabberMotor;
+  private final StatusSignal<Double> velocity;
 
   @Inject
   public GrabberIOReal(GrabberConstants grabberConstants) {
-    arm = new TalonFX(grabberConstants.armMotorId());
+    grabberMotor = new TalonFX(grabberConstants.armMotorId());
+    velocity = grabberMotor.getVelocity();
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, velocity);
   }
 
   @Override
   public void updateInputs(GrabberIOInputs inputs) {
-    // TODO: set all the values on inputs
+    BaseStatusSignal.refreshAll(velocity);
+
+    inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(velocity.getValueAsDouble());
+  }
+  
+  @Override
+  public void setMotorOutputPercent(double outputPercent) {
+    grabberMotor.set(outputPercent);
   }
 }

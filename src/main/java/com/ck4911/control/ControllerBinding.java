@@ -10,6 +10,7 @@ package com.ck4911.control;
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.Controller.Role;
 import com.ck4911.drive.Drive;
+import com.ck4911.grabber.Grabber;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
@@ -27,14 +28,17 @@ public final class ControllerBinding implements VirtualSubsystem {
   private final CyberKnightsController driver;
   private final CyberKnightsController operator;
   private final Drive drive;
+  private final Grabber grabber;
 
   @Inject
   public ControllerBinding(
       Drive drive,
+      Grabber grabber,
       @Controller(Role.DRIVER) CyberKnightsController driver,
       @Controller(Role.OPERATOR) CyberKnightsController operator,
       Alerts alerts) {
     this.drive = drive;
+    this.grabber = grabber;
     this.driver = driver;
     this.operator = operator;
 
@@ -59,6 +63,17 @@ public final class ControllerBinding implements VirtualSubsystem {
   private void setupControls() {
     drive.setDefaultCommand(
         Commands.run(() -> drive.driveArcade(-driver.getLeftY(), -driver.getRightX()), drive));
+
+    driver.rightTrigger().onTrue(
+      Commands.run(() -> grabber.setMotorOutputPercent(.1))
+    ).onFalse(
+      Commands.run(() -> grabber.setMotorOutputPercent(0))
+    );
+    driver.leftTrigger().onTrue(
+      Commands.run(() -> grabber.setMotorOutputPercent(-.1))
+    ).onFalse(
+      Commands.run(() -> grabber.setMotorOutputPercent(0))
+    );
   }
 
   public void setDriverRumble(boolean enabled) {
