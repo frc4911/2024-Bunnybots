@@ -10,4 +10,4 @@ package com.ck4911.toyota;
 import io.soabase.recordbuilder.core.RecordBuilder;
 
 @RecordBuilder
-public record ToyotaConstants(int armMotorId, int rollerMotorId) {}
+public record ToyotaConstants(int rollerMotorId) {}

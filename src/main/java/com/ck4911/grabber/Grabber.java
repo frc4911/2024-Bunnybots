@@ -20,4 +20,8 @@ public final class Grabber extends SubsystemBase {
   public Grabber(GrabberIO io) {
     this.io = io;
   }
+
+  public void setMotorOutputPercent(double outputPercent) {
+    io.setMotorOutputPercent(outputPercent);
+  }
 }

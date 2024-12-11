@@ -17,9 +17,7 @@ public final class TrinityIOReal implements TrinityIO {
   }
 
   @Override
-  public void updateInputs(TrinityIOInputs inputs) {
-    // TODO: set all the values on inputs
-  }
+  public void updateInputs(TrinityIOInputs inputs) {}
 
   @Override
   public void runSetpoint(double setpointRads, double feedforward) {}

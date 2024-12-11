@@ -12,9 +12,13 @@ import org.littletonrobotics.junction.AutoLog;
 public interface GrabberIO {
   @AutoLog
   public static class GrabberIOInputs {
+    public double velocityRadPerSec = 0.0;
     // TODO: add fields here similar to those in TrinityIOInputs
   }
 
   /** Updates the set of loggable inputs. */
-  public default void updateInputs(GrabberIOInputs inputs) {}
+  public default void updateInputs(GrabberIOInputs inputs) {
+  }
+  
+  public default void setMotorOutputPercent(double outputPercent) {}
 }
