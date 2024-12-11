@@ -10,4 +10,4 @@ package com.ck4911.trinity;
 import io.soabase.recordbuilder.core.RecordBuilder;
 
 @RecordBuilder
-public record TrinityConstants(int armMotorId) {}
+public record TrinityConstants(int rollerMotorId) {}

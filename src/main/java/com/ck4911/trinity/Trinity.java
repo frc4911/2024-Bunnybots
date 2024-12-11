@@ -20,4 +20,8 @@ public final class Trinity extends SubsystemBase {
   public Trinity(TrinityIO io) {
     this.io = io;
   }
+
+  public void setMotorOutputPercent(double outputPercent) {
+    io.setMotorOutputPercent(outputPercent);
+  }
 }

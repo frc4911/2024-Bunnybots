@@ -7,18 +7,32 @@
 
 package com.ck4911.trinity;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.fasterxml.jackson.databind.ser.std.StdKeySerializers.Default;
+import com.revrobotics.RelativeEncoder;
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+
+import edu.wpi.first.math.util.Units;
+
 import javax.inject.Inject;
 
 public final class TrinityIOReal implements TrinityIO {
+  private final TalonFX trinityMotor;
+  private final StatusSignal<Double> velocity;
 
   @Inject
   public TrinityIOReal(TrinityConstants trinityConstants) {
-    // TODO: set up motors and encoders here
+    trinityMotor = new TalonFX(trinityConstants.rollerMotorId());
+    velocity = trinityMotor.getVelocity();
+    BaseStatusSignal.setUpdateFrequencyForAll(50.0, velocity);
   }
 
   @Override
   public void updateInputs(TrinityIOInputs inputs) {
-    // TODO: set all the values on inputs
+    BaseStatusSignal.refreshAll(velocity);
+    inputs.velocityRadsPerSec = 
+      Units.rotationsPerMinuteToRadiansPerSecond(velocity.getValueAsDouble());
   }
 
   @Override
@@ -32,5 +46,10 @@ public final class TrinityIOReal implements TrinityIO {
   @Override
   public void setBrakeMode(boolean armBrake) {
     // TODO: pass this on to the motor
+  }
+
+  @Override
+  public void setMotorOutputPercent(double outputPercent) {
+    trinityMotor.set(outputPercent);
   }
 }

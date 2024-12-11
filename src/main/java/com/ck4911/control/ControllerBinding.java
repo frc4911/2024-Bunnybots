@@ -10,11 +10,13 @@ package com.ck4911.control;
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.Controller.Role;
 import com.ck4911.drive.Drive;
+import com.ck4911.trinity.Trinity;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -27,15 +29,18 @@ public final class ControllerBinding implements VirtualSubsystem {
   private final CyberKnightsController driver;
   private final CyberKnightsController operator;
   private final Drive drive;
+  private final Trinity trinity;
 
   @Inject
   public ControllerBinding(
       Drive drive,
+      Trinity trinity,
       @Controller(Role.DRIVER) CyberKnightsController driver,
       @Controller(Role.OPERATOR) CyberKnightsController operator,
       Alerts alerts) {
     this.drive = drive;
     this.driver = driver;
+    this.trinity = trinity;
     this.operator = operator;
 
     driverDisconnected =
@@ -59,6 +64,18 @@ public final class ControllerBinding implements VirtualSubsystem {
   private void setupControls() {
     drive.setDefaultCommand(
         Commands.run(() -> drive.driveArcade(-driver.getLeftY(), -driver.getRightX()), drive));
+
+    driver.rightTrigger().onTrue(
+      Commands.run(() -> trinity.setMotorOutputPercent(.1))
+    ).onFalse(
+      Commands.run(() -> trinity.setMotorOutputPercent(0))
+    );
+
+    driver.leftTrigger().onTrue(
+      Commands.run(() -> trinity.setMotorOutputPercent(-.1))
+    ).onFalse(
+      Commands.run(() -> trinity.setMotorOutputPercent(0))
+    );
   }
 
   public void setDriverRumble(boolean enabled) {
