@@ -10,6 +10,7 @@ package com.ck4911.control;
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.Controller.Role;
 import com.ck4911.drive.Drive;
+import com.ck4911.trinity.Trinity;
 import com.ck4911.toyota.Toyota;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
@@ -28,11 +29,13 @@ public final class ControllerBinding implements VirtualSubsystem {
   private final CyberKnightsController driver;
   private final CyberKnightsController operator;
   private final Drive drive;
+  private final Trinity trinity;
   private final Toyota toyota;
 
   @Inject
   public ControllerBinding(
       Drive drive,
+      Trinity trinity,
       Toyota toyota,
       @Controller(Role.DRIVER) CyberKnightsController driver,
       @Controller(Role.OPERATOR) CyberKnightsController operator,
@@ -40,6 +43,7 @@ public final class ControllerBinding implements VirtualSubsystem {
     this.drive = drive;
     this.toyota = toyota;
     this.driver = driver;
+    this.trinity = trinity;
     this.operator = operator;
 
     driverDisconnected =
@@ -66,6 +70,15 @@ public final class ControllerBinding implements VirtualSubsystem {
 
     driver
         .rightTrigger()
+        .onTrue(Commands.run(() -> trinity.setMotorOutputPercent(.1)))
+        .onFalse(Commands.run(() -> trinity.setMotorOutputPercent(0)));
+
+    driver
+        .leftTrigger()
+        .onTrue(Commands.run(() -> trinity.setMotorOutputPercent(-.1)))
+        .onFalse(Commands.run(() -> trinity.setMotorOutputPercent(0)));
+   driver
+        .rightBumper()
         .onTrue(Commands.run(() -> toyota.setMotorOutputPercent(.1)))
         .onFalse(Commands.run(() -> toyota.setMotorOutputPercent(0)));
     driver

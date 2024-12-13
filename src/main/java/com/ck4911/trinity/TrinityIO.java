@@ -37,4 +37,6 @@ public interface TrinityIO {
 
   /** Set PID values */
   default void setPID(double p, double i, double d) {}
+
+  public default void setMotorOutputPercent(double outputPercent) {}
 }
