@@ -9,8 +9,11 @@ package com.ck4911.auto;
 
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.drive.Drive;
+import com.ck4911.toyota.Toyota;
+import com.ck4911.trinity.Trinity;
 import com.ck4911.util.LocalADStarAK;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.PathPlannerLogging;
@@ -31,13 +34,18 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public final class AutoCommandHandler implements VirtualSubsystem {
   private final LoggedDashboardChooser<Command> chooser;
   private final Drive drive;
+  private final Toyota toyota;
+  private final Trinity trinity;
   private double autoStart;
   private boolean autoMessagePrinted;
   private Command currentAutoCommand;
 
   @Inject
-  public AutoCommandHandler(Drive drive, LoggedDashboardChooser<Command> chooser) {
+  public AutoCommandHandler(
+      Drive drive, Toyota toyota, Trinity trinity, LoggedDashboardChooser<Command> chooser) {
     this.drive = drive;
+    this.toyota = toyota;
+    this.trinity = trinity;
     this.chooser = chooser;
 
     // Configure AutoBuilder for PathPlanner
@@ -86,7 +94,42 @@ public final class AutoCommandHandler implements VirtualSubsystem {
   private void setupAutos() {
     chooser.addDefaultOption("Nothing", Commands.none());
 
+<<<<<<< Updated upstream
     // Set up SysId routines
+=======
+    addTests();
+    addCharacterizations();
+    addSysIds();
+  }
+
+  private void addTests() {
+    chooser.addOption(
+        "Forward",
+        drive.measureDistance(
+            setStartPoseToStartOfPath("ForwardTest").andThen(new PathPlannerAuto("ForwardTest"))));
+    chooser.addOption(
+        "Backward",
+        drive.measureDistance(
+            setStartPoseToStartOfPath("BackwardTest")
+                .andThen(new PathPlannerAuto("BackwardTest"))));
+    chooser.addOption(
+        "Curvey",
+        setStartPoseToStartOfPath("CurveyTest").andThen(new PathPlannerAuto("CurveyTest")));
+    chooser.addOption(
+        "Loopy", setStartPoseToStartOfPath("LoopyTest").andThen(new PathPlannerAuto("LoopyTest")));
+    chooser.addOption(
+        "Tote", setStartPoseToStartOfPath("Tote").andThen(new PathPlannerAuto("Tote")));
+    NamedCommands.registerCommand(
+        "eject", Commands.runOnce(() -> trinity.setMotorOutputPercent(.25), trinity));
+  }
+
+  private void addCharacterizations() {
+    chooser.addOption("Drive Static Characterization", drive.staticCharacterization());
+    chooser.addOption("Drive FF Characterization", drive.feedForwardCharacterization());
+  }
+
+  private void addSysIds() {
+>>>>>>> Stashed changes
     chooser.addOption(
         "Drive SysId (Quasistatic Forward)",
         drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));

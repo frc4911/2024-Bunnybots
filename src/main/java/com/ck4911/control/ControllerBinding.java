@@ -10,6 +10,11 @@ package com.ck4911.control;
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.Controller.Role;
 import com.ck4911.drive.Drive;
+<<<<<<< Updated upstream
+=======
+import com.ck4911.toyota.Toyota;
+import com.ck4911.trinity.Trinity;
+>>>>>>> Stashed changes
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
@@ -60,6 +65,26 @@ public final class ControllerBinding implements VirtualSubsystem {
   private void setupControls() {
     drive.setDefaultCommand(
         Commands.run(() -> drive.driveArcade(-driver.getLeftY(), -driver.getRightX()), drive));
+<<<<<<< Updated upstream
+=======
+
+    driver
+        .rightTrigger() // indexer fwd
+        .onTrue(Commands.runOnce(() -> trinity.setMotorOutputPercent(1)))
+        .onFalse(Commands.runOnce(() -> trinity.setMotorOutputPercent(0)));
+    driver
+        .leftTrigger() // indexer back
+        .onTrue(Commands.runOnce(() -> trinity.setMotorOutputPercent(-1)))
+        .onFalse(Commands.runOnce(() -> trinity.setMotorOutputPercent(0)));
+    driver
+        .rightBumper() // collector fwd
+        .onTrue(Commands.runOnce(() -> toyota.setMotorOutputPercent(.25)))
+        .onFalse(Commands.runOnce(() -> toyota.setMotorOutputPercent(0)));
+    driver
+        .leftBumper() // collector back
+        .onTrue(Commands.runOnce(() -> toyota.setMotorOutputPercent(-.25)))
+        .onFalse(Commands.runOnce(() -> toyota.setMotorOutputPercent(0)));
+>>>>>>> Stashed changes
   }
 
   public void setDriverRumble(boolean enabled) {

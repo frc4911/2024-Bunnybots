@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 10.98,
+      "y": 6.83
+    },
+    "rotation": -46.00999999999999
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,13 +14,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Example Path"
+            "pathName": "StraightPathBackTote"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": null
+            "name": "eject"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
           }
         }
       ]
