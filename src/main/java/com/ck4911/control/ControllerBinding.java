@@ -15,6 +15,9 @@ import com.ck4911.trinity.Trinity;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
+// <-- ADD THIS IMPORT
+import com.ck4911.util.LoggedTunableNumber;
+import com.ck4911.util.LoggedTunableNumber.TunableNumbers;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -32,6 +35,8 @@ public final class ControllerBinding implements VirtualSubsystem {
   private final Trinity trinity;
   private final Toyota toyota;
 
+  private final LoggedTunableNumber driveSpeedLimiter;
+
   @Inject
   public ControllerBinding(
       Drive drive,
@@ -39,12 +44,15 @@ public final class ControllerBinding implements VirtualSubsystem {
       Toyota toyota,
       @Controller(Role.DRIVER) CyberKnightsController driver,
       @Controller(Role.OPERATOR) CyberKnightsController operator,
-      Alerts alerts) {
+      Alerts alerts,
+      TunableNumbers tunableNumbers) {
     this.drive = drive;
     this.toyota = toyota;
     this.driver = driver;
     this.trinity = trinity;
     this.operator = operator;
+
+    this.driveSpeedLimiter = tunableNumbers.create("Controls/DriveSpeedLimiter", 0.7);
 
     driverDisconnected =
         alerts.create("Driver controller disconnected (port 0).", AlertType.WARNING);
@@ -66,7 +74,12 @@ public final class ControllerBinding implements VirtualSubsystem {
 
   private void setupControls() {
     drive.setDefaultCommand(
-        Commands.run(() -> drive.driveArcade(-driver.getLeftY(), -driver.getRightX()), drive));
+        Commands.run(
+            () ->
+                drive.driveArcade(
+                    -driver.getLeftY() * driveSpeedLimiter.get(),
+                    -driver.getRightX() * driveSpeedLimiter.get()),
+            drive));
 
     driver
         .rightTrigger()
