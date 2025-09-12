@@ -10,8 +10,8 @@ package com.ck4911.control;
 import com.ck4911.commands.VirtualSubsystem;
 import com.ck4911.control.Controller.Role;
 import com.ck4911.drive.Drive;
-import com.ck4911.trinity.Trinity;
 import com.ck4911.toyota.Toyota;
+import com.ck4911.trinity.Trinity;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
@@ -77,7 +77,7 @@ public final class ControllerBinding implements VirtualSubsystem {
         .leftTrigger()
         .onTrue(Commands.run(() -> trinity.setMotorOutputPercent(-.1)))
         .onFalse(Commands.run(() -> trinity.setMotorOutputPercent(0)));
-   driver
+    driver
         .rightBumper()
         .onTrue(Commands.run(() -> toyota.setMotorOutputPercent(.1)))
         .onFalse(Commands.run(() -> toyota.setMotorOutputPercent(0)));
