@@ -15,7 +15,6 @@ import com.ck4911.trinity.Trinity;
 import com.ck4911.util.Alert;
 import com.ck4911.util.Alert.AlertType;
 import com.ck4911.util.Alerts;
-// <-- ADD THIS IMPORT
 import com.ck4911.util.LoggedTunableNumber;
 import com.ck4911.util.LoggedTunableNumber.TunableNumbers;
 import edu.wpi.first.wpilibj.DriverStation;
